@@ -5,11 +5,10 @@ import { ChangeEvent, useContext } from 'react';
 import { AppContext } from '@/context/appContext';
 
 export default function Header() {
-  const { fetchPosts, updateQueryString } = useContext(AppContext);
+  const { fetchPosts } = useContext(AppContext);
 
   const handleSearch = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-    updateQueryString(e.nativeEvent.text)
-    fetchPosts();
+    fetchPosts({ queryString: e.nativeEvent.text });
   }
   
   return (

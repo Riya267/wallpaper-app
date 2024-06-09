@@ -9,7 +9,7 @@ export default function CardList() {
   const { state, fetchPosts } = useContext(AppContext);
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts({});
   }, []);
 
   const columns = getColumns();

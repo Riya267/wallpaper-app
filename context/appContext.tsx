@@ -17,9 +17,11 @@ export interface WallpaperInterface {
     imageHeight: number
 }
 
-interface AppState {
-    selectedCategory: string
-    queryString: string
+type fetchPostsProps = {
+  queryString?: string
+  selectedCategory?: string
+}
+interface AppState extends fetchPostsProps{
     wallpapers: Array<WallpaperInterface>
     loading: boolean
     error: string | null
@@ -27,8 +29,7 @@ interface AppState {
   
 interface AppContextProps {
     state: AppState;
-    fetchPosts: () => void;
-    updateQueryString: (query: string) => void;
+    fetchPosts: ({ queryString, selectedCategory }: fetchPostsProps) => void;
 }
 
 interface AppProviderProps {
@@ -36,8 +37,8 @@ interface AppProviderProps {
 }
 
 const initialState = {
-    selectedCategory: "",
     queryString: "",
+    selectedCategory: "",
     wallpapers: [],
     loading: false,
     error: null,
@@ -46,20 +47,15 @@ const initialState = {
 export const AppContext = createContext<AppContextProps>({
     state: initialState,
     fetchPosts: () => {},
-    updateQueryString: () => {}
   });
 
 export const ContextProvider:React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
 
-  const updateQueryString = async (query: string) => {
-    setState((prevState) => ({ ...prevState, loading: true, error: null, queryString: query }));
-  }
-
-  const fetchPosts = async () => {
-    setState((prevState) => ({ ...prevState, loading: true, error: null }));
+  const fetchPosts = async ({ queryString, selectedCategory }: fetchPostsProps) => {
+    setState((prevState) => ({ ...prevState, loading: true, error: null, selectedCategory: selectedCategory ?? "", queryString: queryString ?? "" }));
     try {
-      const allPosts = await getAllPosts({page: 1, pageSize: 10, querystring: state.queryString, category: state.selectedCategory});
+      const allPosts = await getAllPosts({page: 1, pageSize: 10, querystring: queryString, category: selectedCategory});
       setState((prevState) => ({
         ...prevState,
         wallpapers: allPosts,
@@ -76,7 +72,7 @@ export const ContextProvider:React.FC<AppProviderProps> = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ state, fetchPosts, updateQueryString }}>
+    <AppContext.Provider value={{ state, fetchPosts }}>
       {children}
     </AppContext.Provider>
   );
