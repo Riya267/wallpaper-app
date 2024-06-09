@@ -1,24 +1,42 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { AppContext, WallpaperInterface } from '@/context/appContext';
+import { MasonryFlashList } from "@shopify/flash-list";
+import Card from './card';
+import { getColumns } from '@/util/helper';
 
 export default function CardList() {
+  const { state, fetchPosts } = useContext(AppContext);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const columns = getColumns();
   return (
-    <View>
-     <Text style={{ color: "#7d8080", marginLeft: 10, marginBottom: 10 }}>Categories</Text>
-     <ScrollView horizontal scrollEnabled>
-     </ScrollView>
+      <View style={styles.container}>
+        <MasonryFlashList
+          numColumns={columns}
+          data={state.wallpapers}
+          renderItem={({ item, index }: { item: WallpaperInterface, index: number }) => (
+              <Card wallpaper={item} index={index} columns={columns}/>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          estimatedItemSize={200}
+          contentContainerStyle={styles.contentContainerStyle}
+          scrollEnabled
+        />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  categories: {
-      color: "#ffffff",
-      marginLeft: 10,
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderWidth: 2,
-      backgroundColor: "#700428",
-      borderRadius: 20,
-      borderColor: "#696466",
+  container: {
+    marginTop: 20,
+    height: "100%",
+    paddingBottom: 10
+  },
+  contentContainerStyle: {
+    paddingHorizontal: 10,
   }
 });
