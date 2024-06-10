@@ -1,7 +1,7 @@
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
-import { useContext, useEffect, useState } from 'react';
-import { NativeSyntheticEvent, ScrollView, StyleSheet, Text, TextInputChangeEventData, TouchableOpacity, View } from 'react-native';
+import { useContext } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const categories = ["backgrounds", "fashion", "nature", "science", "education", "feelings", "health", "people", "religion", "places", "animals", "industry", "computer", "food", "sports", "transportation", "travel", "buildings", "business", "music"]
 
@@ -17,10 +17,9 @@ export default function CategoriesList() {
         <ScrollView horizontal scrollEnabled>
            {
               categories.map((category) => {
-                return <TouchableOpacity style={[styles.categories, 
-                                              state.selectedCategory === category && styles.activeCategory]} 
-                onPress={() => handleCategoryClick(category)}>
-                          <Text style={[state.selectedCategory === category ? { color: theme.colors.white } : { color: "#01204E" }]}>{category}</Text>
+                return <TouchableOpacity style={styles.categories} 
+                onPress={() => handleCategoryClick(category)} key={category}>
+                          <Text style={{ color: theme.colors.white, fontWeight: "500" }}>{category}</Text>
                 </TouchableOpacity>
               })
             }
@@ -35,10 +34,7 @@ const styles = StyleSheet.create({
       paddingVertical: 10,
       paddingHorizontal: 20,
       borderWidth: 2,
-      borderColor: "#01204E",
+      backgroundColor: theme.colors.pink,
       borderRadius: 20,
   },
-  activeCategory: {
-    backgroundColor: "#01204E",
-  }
 });

@@ -25,6 +25,7 @@ export default function CardList() {
           estimatedItemSize={200}
           contentContainerStyle={styles.contentContainerStyle}
           scrollEnabled
+          indicatorStyle='white'
         />
     </View>
   );

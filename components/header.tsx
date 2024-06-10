@@ -1,8 +1,9 @@
-import { NativeSyntheticEvent, StyleSheet, TextInput, TextInputChangeEventData, View } from 'react-native';
+import { NativeSyntheticEvent, StyleSheet, TextInput, TextInputChangeEventData, TouchableOpacity, View } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import { theme } from '@/constants/theme';
-import { ChangeEvent, useContext } from 'react';
+import { useContext } from 'react';
 import { AppContext } from '@/context/appContext';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Header() {
   const { fetchPosts } = useContext(AppContext);
@@ -12,11 +13,14 @@ export default function Header() {
   }
   
   return (
-      <View style={{ marginHorizontal: 5 }}>
+      <View style={{ marginTop: 5, marginBottom: 10, paddingHorizontal: 10, display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
         <View style={styles.searchBarContainer}>
-          <Feather name="search" size={24} color="#7d8080" />
-          <TextInput style={styles.searchBarInput} placeholder='Search...' onChange={handleSearch}/>
+          <Feather name="search" size={27} color={theme.colors.background} />
+          <TextInput style={styles.searchBarInput} placeholder='Search Wallpapers...' placeholderTextColor={theme.colors.background} onChange={handleSearch}/>
         </View>
+        <TouchableOpacity>
+        <Ionicons name="filter-sharp" size={30} color={theme.colors.white} />
+        </TouchableOpacity>
       </View>
   );
 }
@@ -26,15 +30,16 @@ const styles = StyleSheet.create({
      display: "flex",
      flexDirection: "row",
      alignItems: "center",
-     width: "100%",
-     height: 50,
+     width: "85%",
+     height: 60,
      backgroundColor: theme.colors.white,
      marginVertical:20,
-     padding: 10,
-     borderRadius: 20,
+     padding: 15,
+     borderRadius: 30,
   },
   searchBarInput: {
       color: theme.colors.black,
       marginLeft: 10,
+      fontSize: 20
   }
 });

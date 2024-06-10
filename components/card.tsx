@@ -1,7 +1,8 @@
 import { theme } from '@/constants/theme';
 import { WallpaperInterface } from '@/context/appContext';
 import { getImageSize } from '@/util/helper';
-import { StyleSheet, Image, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 
 type CardProps = {
   wallpaper: WallpaperInterface,
@@ -23,8 +24,11 @@ export default function Card({ wallpaper, index, columns }: CardProps) {
   return (
           <TouchableOpacity style={[styles.imageWrapper, !isLastInRow() && styles.spacing]}>
                 <Image 
-                  source={{ uri: wallpaper.webformatURL}} 
+                  source={wallpaper.webformatURL}
+                  placeholder={wallpaper.tags}
                   style={[styles.image, getImageHeight()]}
+                  contentFit="cover"
+                  transition={1000}
                 />
           </TouchableOpacity>
   );
@@ -32,7 +36,6 @@ export default function Card({ wallpaper, index, columns }: CardProps) {
 
 const styles = StyleSheet.create({
   image: {
-      objectFit: "fill",
       width: "100%",
       height: 300
   },
