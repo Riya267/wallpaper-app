@@ -1,3 +1,4 @@
+import AppliedFiltersList from '@/components/appliedFiltersList';
 import CardList from '@/components/cardList';
 import CategoriesList from '@/components/categories';
 import FilterModal from '@/components/filterModal';
@@ -20,6 +21,7 @@ export default function ModalScreen() {
       />
         <Header />
         <CategoriesList />
+        <AppliedFiltersList />
         <View style={styles.imageGridContainer}>
           <CardList />
         </View>

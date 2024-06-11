@@ -9,8 +9,12 @@ const CardList: React.FC = ()  => {
   const { state, fetchWallpapers } = useContext(AppContext);
 
   useEffect(() => {
-    fetchWallpapers({});
-  }, []);
+    fetchWallpapers({
+      queryString: state.queryString,
+      selectedCategory: state.selectedCategory,
+      appliedFilters: state.appliedFilters,
+    });
+  }, [state.queryString, state.selectedCategory, state.appliedFilters]);
 
   const columns = getColumns();
   return (

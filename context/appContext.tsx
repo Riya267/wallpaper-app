@@ -21,7 +21,7 @@ export interface WallpaperInterface {
 type fetchPostsProps = {
   queryString?: string
   selectedCategory?: string
-  appliedFilters?:  { [key: string]: string[] } 
+  appliedFilters?:  Array<FilterOptionsInterface> 
 }
 
 interface AppState extends fetchPostsProps{
@@ -35,6 +35,9 @@ interface AppContextProps {
     state: AppState;
     fetchWallpapers: ({ queryString, selectedCategory }: fetchPostsProps) => void;
     toggleFilterModalVisibility: (toggle: boolean) => void;
+    removeFilter: (filter: string) => void;
+    setSelectedCategory: (selectedCategory: string) => void;
+    setQueryString: (queryString: string) => void;
 }
 
 interface AppProviderProps {
@@ -55,13 +58,37 @@ export const AppContext = createContext<AppContextProps>({
     state: initialState,
     fetchWallpapers: () => {},
     toggleFilterModalVisibility: () => {},
+    removeFilter: () => {},
+    setSelectedCategory: () => {},
+    setQueryString: () => {},
   });
 
 export const ContextProvider:React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
 
+  const removeFilter = (filter: string) => {
+    setState(prevState => ({
+      ...prevState,
+      appliedFilters: prevState.appliedFilters?.filter(appliedFilter => !appliedFilter.filterOptions.includes(filter))
+    }));
+  };
+
+  const setSelectedCategory = (selectedCategory: string) => {
+    setState((prevState) => ({ 
+      ...prevState, 
+      selectedCategory: selectedCategory ?? ""
+    }));
+  }
+
+  const setQueryString = (queryString: string) => {
+    setState((prevState) => ({ 
+      ...prevState, 
+      queryString: queryString ?? ""
+    }));
+  }
+
   const fetchWallpapers = async ({ queryString, selectedCategory, appliedFilters }: fetchPostsProps) => {
-    setState((prevState) => ({ ...prevState, loading: true, error: null, selectedCategory: selectedCategory ?? "", queryString: queryString ?? "", appliedFilters: appliedFilters ?? {} }));
+    setState((prevState) => ({ ...prevState, loading: true, error: null, selectedCategory: selectedCategory ?? "", queryString: queryString ?? "", appliedFilters: appliedFilters ?? [] }));
     try {
       const allPosts = await getAllWallpapers({page: 1, pageSize: 10, querystring: queryString, category: selectedCategory, appliedFilters: appliedFilters});
       setState((prevState) => ({
@@ -84,7 +111,7 @@ export const ContextProvider:React.FC<AppProviderProps> = ({ children }) => {
   }
 
   return (
-    <AppContext.Provider value={{ state, fetchWallpapers, toggleFilterModalVisibility }}>
+    <AppContext.Provider value={{ state, fetchWallpapers, toggleFilterModalVisibility, removeFilter, setSelectedCategory, setQueryString }}>
       {children}
     </AppContext.Provider>
   );

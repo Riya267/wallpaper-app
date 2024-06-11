@@ -1,14 +1,16 @@
 import categories from '@/constants/categories';
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
+import { AntDesign } from '@expo/vector-icons';
 import { useContext } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const CategoriesList: React.FC = ()  => {
-  const { state, fetchWallpapers } = useContext(AppContext);
+  const { state, setSelectedCategory } = useContext(AppContext);
 
-  const handleCategoryClick = (category: string) => {
-    fetchWallpapers({ selectedCategory: category });
+  const handleCategoryToggle = (category: string) => {
+    if(state.selectedCategory === category) setSelectedCategory("");
+    else setSelectedCategory(category)
   }
   
   return (
@@ -17,8 +19,9 @@ const CategoriesList: React.FC = ()  => {
            {
               categories.map((category) => {
                 return <TouchableOpacity style={styles.categories} 
-                onPress={() => handleCategoryClick(category)} key={category}>
-                          <Text style={{ color: theme.colors.white, fontWeight: "500" }}>{category}</Text>
+                onPress={() => handleCategoryToggle(category)} key={category}>
+                          <Text style={{ color: theme.colors.white, fontWeight: "500", marginRight: 5 }}>{category}</Text>
+                          {state.selectedCategory === category &&<AntDesign name="check" size={15} color={theme.colors.white} />}
                 </TouchableOpacity>
               })
             }
@@ -35,6 +38,9 @@ const styles = StyleSheet.create({
       borderWidth: 2,
       backgroundColor: theme.colors.pink,
       borderRadius: 20,
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
   },
 });
 
