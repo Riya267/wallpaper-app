@@ -1,6 +1,6 @@
 import { Dimensions } from "react-native"
 
-const { width } = Dimensions.get("window");
+export const { width, height } = Dimensions.get("screen");
 
 export const getColumns = () => {
     if(width >= 1024) return 4;

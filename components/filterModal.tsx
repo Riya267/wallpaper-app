@@ -12,7 +12,7 @@ export interface FilterOptionsInterface {
 }
 
 const FilterModal: React.FC = () => {
-  const { state, toggleFilterModalVisibility, fetchWallpapers } = useContext(AppContext);
+  const { state, toggleFilterModalVisibility, setPage, setAppliedFilters } = useContext(AppContext);
   const [ selectedFilters, setSelectedFilters ] = useState<Array<FilterOptionsInterface>>([]);
 
   const onClose = () => {
@@ -48,12 +48,9 @@ const FilterModal: React.FC = () => {
   const handleFetchWallpaper = (type: "clear" | "apply") => {
     console.log("SelectedFilters", selectedFilters)
     if (type === "clear") setSelectedFilters([]);
+    setPage(1)
     toggleFilterModalVisibility(false);
-    fetchWallpapers({
-      queryString: state.queryString,
-      selectedCategory: state.selectedCategory,
-      appliedFilters: type === "clear" ? undefined : selectedFilters
-    });
+    setAppliedFilters(selectedFilters)
   }
 
   return (

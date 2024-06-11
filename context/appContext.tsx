@@ -18,14 +18,14 @@ export interface WallpaperInterface {
     imageHeight: number
 }
 
-type fetchPostsProps = {
+interface AppState {
+  page: number
+  perPage: number
   queryString?: string
   selectedCategory?: string
   appliedFilters?:  Array<FilterOptionsInterface> 
-}
-
-interface AppState extends fetchPostsProps{
   wallpapers: Array<WallpaperInterface>
+  scrollMoreWallpapers: boolean
   loading: boolean
   error: string | null
   openfilterModal: boolean
@@ -33,11 +33,14 @@ interface AppState extends fetchPostsProps{
   
 interface AppContextProps {
     state: AppState;
-    fetchWallpapers: ({ queryString, selectedCategory }: fetchPostsProps) => void;
+    fetchWallpapers: () => void;
     toggleFilterModalVisibility: (toggle: boolean) => void;
     removeFilter: (filter: string) => void;
     setSelectedCategory: (selectedCategory: string) => void;
     setQueryString: (queryString: string) => void;
+    setPage: (page: number) => void;
+    setShowMoreWallpapers: (hasMore: boolean) => void;
+    setAppliedFilters: (selectedFilters: Array<FilterOptionsInterface>) => void;
 }
 
 interface AppProviderProps {
@@ -45,13 +48,16 @@ interface AppProviderProps {
 }
 
 const initialState = {
+    page: 1,
+    perPage: 20,
     queryString: "",
     selectedCategory: "",
     wallpapers: [],
     loading: false,
     error: null,
     openfilterModal: false,
-    appliedfilters: []
+    appliedfilters: [],
+    scrollMoreWallpapers: true,
 }
 
 export const AppContext = createContext<AppContextProps>({
@@ -61,6 +67,9 @@ export const AppContext = createContext<AppContextProps>({
     removeFilter: () => {},
     setSelectedCategory: () => {},
     setQueryString: () => {},
+    setPage: () => {},
+    setShowMoreWallpapers: () => {},
+    setAppliedFilters: () => {},
   });
 
 export const ContextProvider:React.FC<AppProviderProps> = ({ children }) => {
@@ -87,16 +96,47 @@ export const ContextProvider:React.FC<AppProviderProps> = ({ children }) => {
     }));
   }
 
-  const fetchWallpapers = async ({ queryString, selectedCategory, appliedFilters }: fetchPostsProps) => {
-    setState((prevState) => ({ ...prevState, loading: true, error: null, selectedCategory: selectedCategory ?? "", queryString: queryString ?? "", appliedFilters: appliedFilters ?? [] }));
+  const setPage = (page: number) => {
+    setState((prevState) => ({ 
+      ...prevState, 
+      page: page ?? 1
+    }));
+  }
+
+  const setShowMoreWallpapers = (hasMore: boolean) => {
+    setState((prevState) => ({ 
+      ...prevState, 
+      scrollMoreWallpapers: hasMore
+    }));
+  }
+
+  const setAppliedFilters = (selectedFilters: Array<FilterOptionsInterface>) => {
+    setState((prevState) => ({ 
+      ...prevState, 
+      appliedFilters: selectedFilters
+    }));
+  }
+
+  const fetchWallpapers = async () => {
+    setState((prevState) => ({ ...prevState, loading: true, error: null }));
     try {
-      const allPosts = await getAllWallpapers({page: 1, pageSize: 10, querystring: queryString, category: selectedCategory, appliedFilters: appliedFilters});
-      setState((prevState) => ({
-        ...prevState,
-        wallpapers: allPosts,
-        loading: false,
-        error: null
-      }));
+      const allPosts = await getAllWallpapers({ page: state.page, pageSize: state.perPage, querystring: state.queryString, category: state.selectedCategory, appliedFilters: state.appliedFilters });
+      if(allPosts?.length === 0) {
+        setState((prevState) => ({
+          ...prevState,
+          loading: false,
+          error: null,
+          scrollMoreWallpapers: false
+        }));
+      } else{
+        setState((prevState) => ({
+          ...prevState,
+          wallpapers: state.page === 1 && state.wallpapers.length > 0 ? allPosts : [...state.wallpapers, ...allPosts],
+          loading: false,
+          error: null,
+          scrollMoreWallpapers: true
+        }));
+      }
     } catch (error) {
       setState((prevState) => ({
         ...prevState,
@@ -111,7 +151,7 @@ export const ContextProvider:React.FC<AppProviderProps> = ({ children }) => {
   }
 
   return (
-    <AppContext.Provider value={{ state, fetchWallpapers, toggleFilterModalVisibility, removeFilter, setSelectedCategory, setQueryString }}>
+    <AppContext.Provider value={{ state, fetchWallpapers, toggleFilterModalVisibility, removeFilter, setSelectedCategory, setQueryString, setPage, setShowMoreWallpapers, setAppliedFilters }}>
       {children}
     </AppContext.Provider>
   );

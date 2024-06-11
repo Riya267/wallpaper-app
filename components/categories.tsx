@@ -6,11 +6,14 @@ import { useContext } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const CategoriesList: React.FC = ()  => {
-  const { state, setSelectedCategory } = useContext(AppContext);
+  const { state, setSelectedCategory, setPage } = useContext(AppContext);
 
   const handleCategoryToggle = (category: string) => {
     if(state.selectedCategory === category) setSelectedCategory("");
-    else setSelectedCategory(category)
+    else {
+      setSelectedCategory(category)
+      setPage(1)
+    }
   }
   
   return (

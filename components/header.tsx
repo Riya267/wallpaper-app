@@ -6,7 +6,7 @@ import { AppContext } from '@/context/appContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Header: React.FC = () => {
-  const { setQueryString, toggleFilterModalVisibility } = useContext(AppContext);
+  const { setQueryString, toggleFilterModalVisibility, setPage } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
@@ -30,6 +30,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     setQueryString(debouncedSearchTerm);
+    setPage(1);
   }, [debouncedSearchTerm]);
 
   return (
