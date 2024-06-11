@@ -1,6 +1,6 @@
 import { AppContext } from '@/context/appContext';
 import React, { useContext, useState } from 'react';
-import { View, Text, Modal, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Modal, Button, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import filterOptions from '@/constants/filters';
@@ -13,7 +13,7 @@ export interface FilterOptionsInterface {
 
 const FilterModal: React.FC = () => {
   const { state, toggleFilterModalVisibility, fetchWallpapers } = useContext(AppContext);
-  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string[] }>({});
+  const [ selectedFilters, setSelectedFilters ] = useState<Array<FilterOptionsInterface>>([]);
 
   const onClose = () => {
     toggleFilterModalVisibility(false);
@@ -21,30 +21,39 @@ const FilterModal: React.FC = () => {
 
   const handleSelectFilter = (filterKey: string, option: string) => {
     setSelectedFilters(prevFilters => {
-      const prevSelectedOptions = prevFilters[filterKey] || [];
+      const index = prevFilters.findIndex(filter => filter.mappingKey === filterKey);
+      const filter = prevFilters[index];
+      const prevSelectedOptions = filter ? filter.filterOptions : [];
       const isSelected = prevSelectedOptions.includes(option);
       const newSelectedOptions = isSelected
         ? prevSelectedOptions.filter(item => item !== option)
         : [...prevSelectedOptions, option];
       
-      return {
-        ...prevFilters,
-        [filterKey]: newSelectedOptions,
-      };
+      const updatedFilters = [...prevFilters];
+      if (filter) {
+        updatedFilters[index] = { ...filter, filterOptions: newSelectedOptions };
+      } else {
+        updatedFilters.push({ filterLabel: filterOptions.find(f => f.mappingKey === filterKey)?.filterLabel || '', filterOptions: newSelectedOptions, mappingKey: filterKey });
+      }
+
+      return updatedFilters;
     });
   };
 
   const isSelected = (filterKey: string, option: string) => {
-    return selectedFilters[filterKey]?.includes(option);
+    const filter = selectedFilters.find(filter => filter.mappingKey === filterKey);
+    return filter ? filter.filterOptions.includes(option) : false;
   };
 
-  const handleFetchWallpaper = () => {
+  const handleFetchWallpaper = (type: "clear" | "apply") => {
     console.log("SelectedFilters", selectedFilters)
-    // fetchWallpapers({
-    //   queryString: state.queryString,
-    //   selectedCategory: state.selectedCategory,
-    //   appliedFilters: selectedFilters
-    // })
+    if (type === "clear") setSelectedFilters([]);
+    toggleFilterModalVisibility(false);
+    fetchWallpapers({
+      queryString: state.queryString,
+      selectedCategory: state.selectedCategory,
+      appliedFilters: type === "clear" ? undefined : selectedFilters
+    });
   }
 
   return (
@@ -92,14 +101,19 @@ const FilterModal: React.FC = () => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <Button title="Clear" onPress={handleFetchWallpaper} />
-            <Button title="Apply" onPress={handleFetchWallpaper} />
+            <Pressable onPress={() => handleFetchWallpaper("clear")} style={styles.button}>
+              <Text style={{ color: theme.colors.background, fontSize: 20, fontWeight: "500" }}>Clear</Text>
+            </Pressable>
+            <Pressable onPress={() => handleFetchWallpaper("apply")} style={[styles.button, { backgroundColor: theme.colors.background }]}>
+              <Text style={{ color: theme.colors.white, fontSize: 20, fontWeight: "500" }}>Apply</Text>
+            </Pressable>
           </View>
         </View>
       </View>
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -154,12 +168,18 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 10
   },
   closeIcon: {
     position: "absolute", 
     top: 10, 
     right: 10,
     padding: 10
+  },
+  button: {
+    paddingHorizontal: 20, 
+    paddingVertical: 10,
+    borderRadius: 20
   }
 });
 
