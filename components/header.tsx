@@ -5,27 +5,40 @@ import { useContext } from 'react';
 import { AppContext } from '@/context/appContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function Header() {
-  const { fetchPosts } = useContext(AppContext);
+const Header: React.FC = () => {
+  const { fetchWallpapers, toggleFilterModalVisibility } = useContext(AppContext);
 
   const handleSearch = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-    fetchPosts({ queryString: e.nativeEvent.text });
+    fetchWallpapers({ queryString: e.nativeEvent.text });
   }
   
+  const handleFilterClick = () => {
+    toggleFilterModalVisibility(true);
+  }
+
   return (
-      <View style={{ marginTop: 5, marginBottom: 10, paddingHorizontal: 10, display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
+      <View style={styles.headerContainer}>
         <View style={styles.searchBarContainer}>
           <Feather name="search" size={27} color={theme.colors.background} />
           <TextInput style={styles.searchBarInput} placeholder='Search Wallpapers...' placeholderTextColor={theme.colors.background} onChange={handleSearch}/>
         </View>
-        <TouchableOpacity>
-        <Ionicons name="filter-sharp" size={30} color={theme.colors.white} />
+        <TouchableOpacity onPress={handleFilterClick} style={{ padding: 10 }}>
+           <Ionicons name="filter-sharp" size={30} color={theme.colors.white} />
         </TouchableOpacity>
       </View>
   );
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    marginTop: 5, 
+    marginBottom: 10, 
+    paddingHorizontal: 5, 
+    display: "flex", 
+    flexDirection: "row", 
+    alignItems: "center", 
+    justifyContent: "space-between"
+  },
   searchBarContainer: {
      display: "flex",
      flexDirection: "row",
@@ -43,3 +56,5 @@ const styles = StyleSheet.create({
       fontSize: 20
   }
 });
+
+export default Header;

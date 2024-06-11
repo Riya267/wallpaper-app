@@ -10,7 +10,7 @@ type CardProps = {
   columns: number
 }
 
-export default function Card({ wallpaper, index, columns }: CardProps) {
+const Card: React.FC<CardProps> = ({ wallpaper, index, columns }) => {
 
   const isLastInRow = () => {
    return (index+1 % columns === 0)
@@ -50,3 +50,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 5
   }
 });
+
+export default Card;

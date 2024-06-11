@@ -5,10 +5,12 @@ type GetPostsInterface = {
     pageSize: number
     category?: string
     querystring?: string
+    appliedFilters?:  { [key: string]: string[] } 
 }
 
-const getAllPosts = async ({ page, pageSize, category, querystring }: GetPostsInterface) => {
+const getAllWallpapers = async ({ page, pageSize, category, querystring }: GetPostsInterface) => {
     try {
+        const filters = [];
         console.log("api url", `${API_URL}&per_page=${pageSize}&page=${page}${querystring ? `&q=${querystring}` : ""}${category ? `&category=${category}` : ""}`)
         const response = await fetch(`${API_URL}&per_page=${pageSize}&page=${page}${querystring ? `&q=${querystring}` : ""}${category ? `&category=${category}` : ""}`, {
             method: "GET"
@@ -21,5 +23,5 @@ const getAllPosts = async ({ page, pageSize, category, querystring }: GetPostsIn
 }
 
 export {
-    getAllPosts
+    getAllWallpapers
 }

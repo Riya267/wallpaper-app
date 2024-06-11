@@ -1,15 +1,15 @@
 import React, { useContext, useEffect } from 'react';
-import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { AppContext, WallpaperInterface } from '@/context/appContext';
 import { MasonryFlashList } from "@shopify/flash-list";
 import Card from './card';
 import { getColumns } from '@/util/helper';
 
-export default function CardList() {
-  const { state, fetchPosts } = useContext(AppContext);
+const CardList: React.FC = ()  => {
+  const { state, fetchWallpapers } = useContext(AppContext);
 
   useEffect(() => {
-    fetchPosts({});
+    fetchWallpapers({});
   }, []);
 
   const columns = getColumns();
@@ -41,3 +41,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   }
 });
+
+export default CardList;

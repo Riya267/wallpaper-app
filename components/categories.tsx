@@ -1,15 +1,14 @@
+import categories from '@/constants/categories';
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
 import { useContext } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const categories = ["backgrounds", "fashion", "nature", "science", "education", "feelings", "health", "people", "religion", "places", "animals", "industry", "computer", "food", "sports", "transportation", "travel", "buildings", "business", "music"]
-
-export default function CategoriesList() {
-  const { state, fetchPosts } = useContext(AppContext);
+const CategoriesList: React.FC = ()  => {
+  const { state, fetchWallpapers } = useContext(AppContext);
 
   const handleCategoryClick = (category: string) => {
-    fetchPosts({ selectedCategory: category });
+    fetchWallpapers({ selectedCategory: category });
   }
   
   return (
@@ -38,3 +37,5 @@ const styles = StyleSheet.create({
       borderRadius: 20,
   },
 });
+
+export default CategoriesList;

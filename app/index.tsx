@@ -1,7 +1,9 @@
 import CardList from '@/components/cardList';
 import CategoriesList from '@/components/categories';
+import FilterModal from '@/components/filterModal';
 import Header from '@/components/header';
 import { theme } from '@/constants/theme';
+import { useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,6 +23,7 @@ export default function ModalScreen() {
         <View style={styles.imageGridContainer}>
           <CardList />
         </View>
+        <FilterModal />
     </View>
       
   );
