@@ -5,7 +5,7 @@ import { AppContext } from '@/context/appContext';
 import { theme } from '@/constants/theme';
 
 const AppliedFiltersList: React.FC = () => {
-  const { state, removeFilter, fetchWallpapers } = useContext(AppContext);
+  const { state, removeFilter, setPage } = useContext(AppContext);
   const appliedFiltersArray = (state.appliedFilters || []).flatMap(appliedFilter => appliedFilter.filterOptions);
 
   const renderItem = ({ item }: { item: string }) => (
@@ -19,6 +19,7 @@ const AppliedFiltersList: React.FC = () => {
 
   const handleFilterClear = (filter: string) => {
       removeFilter(filter);
+      setPage(1);
   };
 
   return (

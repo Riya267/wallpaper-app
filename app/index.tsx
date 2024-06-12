@@ -4,7 +4,6 @@ import CategoriesList from '@/components/categories';
 import FilterModal from '@/components/filterModal';
 import Header from '@/components/header';
 import { theme } from '@/constants/theme';
-import { useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

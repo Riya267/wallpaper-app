@@ -9,11 +9,13 @@ const CategoriesList: React.FC = ()  => {
   const { state, setSelectedCategory, setPage } = useContext(AppContext);
 
   const handleCategoryToggle = (category: string) => {
-    if(state.selectedCategory === category) setSelectedCategory("");
-    else {
-      setSelectedCategory(category)
-      setPage(1)
+    if(state.selectedCategory === category) {
+      setSelectedCategory("");
     }
+    else {
+      setSelectedCategory(category);
+    }
+    setPage(1)
   }
   
   return (

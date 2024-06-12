@@ -1,5 +1,5 @@
 import { AppContext } from '@/context/appContext';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Modal, Button, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
@@ -13,7 +13,7 @@ export interface FilterOptionsInterface {
 
 const FilterModal: React.FC = () => {
   const { state, toggleFilterModalVisibility, setPage, setAppliedFilters } = useContext(AppContext);
-  const [ selectedFilters, setSelectedFilters ] = useState<Array<FilterOptionsInterface>>([]);
+  const [ selectedFilters, setSelectedFilters ] = useState<Array<FilterOptionsInterface>>(state.appliedFilters || []);
 
   const onClose = () => {
     toggleFilterModalVisibility(false);
@@ -35,10 +35,13 @@ const FilterModal: React.FC = () => {
       } else {
         updatedFilters.push({ filterLabel: filterOptions.find(f => f.mappingKey === filterKey)?.filterLabel || '', filterOptions: newSelectedOptions, mappingKey: filterKey });
       }
-
       return updatedFilters;
     });
   };
+
+  useEffect(() => {
+      setSelectedFilters(state.appliedFilters || [])
+  },[state.appliedFilters])
 
   const isSelected = (filterKey: string, option: string) => {
     const filter = selectedFilters.find(filter => filter.mappingKey === filterKey);
@@ -151,11 +154,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     paddingVertical: 10,
     paddingHorizontal: 15,
+    borderStyle: 'dashed',
     borderWidth: 2,
     borderRadius: 50,
-    borderStyle: 'dashed',
     margin: 5,
     alignItems: "center",
+    height: 50
   },
   filterOptionText: {
     color: theme.colors.pink,
