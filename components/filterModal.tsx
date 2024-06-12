@@ -49,11 +49,10 @@ const FilterModal: React.FC = () => {
   };
 
   const handleFetchWallpaper = (type: "clear" | "apply") => {
-    console.log("SelectedFilters", selectedFilters)
-    if (type === "clear") setSelectedFilters([]);
-    setPage(1)
     toggleFilterModalVisibility(false);
-    setAppliedFilters(selectedFilters)
+    if (type === "clear") setAppliedFilters([]);
+    else setAppliedFilters(selectedFilters)
+    setPage(1)
   }
 
   return (
