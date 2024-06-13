@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     marginVertical: 20,
     borderRadius: 30,
-    paddingLeft: 10
+    paddingLeft: 15
   },
   searchBarInput: {
     color: theme.colors.black,

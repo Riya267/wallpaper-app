@@ -1,42 +1,67 @@
-import AppliedFiltersList from '@/components/appliedFiltersList';
-import CardList from '@/components/cardList';
-import CategoriesList from '@/components/categories';
-import FilterModal from '@/components/filterModal';
-import Header from '@/components/header';
 import { theme } from '@/constants/theme';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { useRouter } from 'expo-router';
+import { StatusBar, StyleSheet, Text, TouchableOpacity, View, Image, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function ModalScreen() {
-  const { top } = useSafeAreaInsets();
-  const marginTop = top > 0 ? top : 30;
+export default function Index() {
+  const { top: safeAreaTop } = useSafeAreaInsets();
+  const marginTop = safeAreaTop > 0 ? safeAreaTop : 30;
+  const router = useRouter();
 
   return (
     <View style={[styles.container, { marginTop }]}>
       <StatusBar
-        animated={true}
+        animated
         backgroundColor={theme.colors.background}
-        barStyle={"light-content"}
+        barStyle="light-content"
       />
-        <Header />
-        <CategoriesList />
-        <AppliedFiltersList />
-        <View style={styles.imageGridContainer}>
-          <CardList />
-        </View>
-        <FilterModal />
+      <Image 
+        source={require('../assets/images/wallpapers.jpg')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      />
+      <BlurView intensity={115} tint="dark" style={styles.blurContainer}>
+        <Text style={styles.description}>
+          Explore millions of cool wallpapers designed by top artists to elevate your device.
+        </Text>
+        <TouchableOpacity style={styles.exploreButton} onPress={() => router.push("/home")}>
+          <Text style={styles.exploreButtonText}>Get Started</Text>
+        </TouchableOpacity>
+      </BlurView>
     </View>
-      
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: theme.colors.background,
+    justifyContent: "flex-end"
   },
-  imageGridContainer: {
-    flex: 1
+  blurContainer: {
+    padding: 20,
+    justifyContent: 'flex-end',
+    overflow: 'hidden',
+  },
+  description: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: theme.colors.white,
+    textAlign: 'center'
+  },
+  backgroundImage: {
+    ...StyleSheet.absoluteFillObject
+  },
+  exploreButton: {
+    backgroundColor: theme.colors.pink,
+    padding: 15,
+    borderRadius: 30,
+    marginTop: 20,
+    alignItems: 'center'
+  },
+  exploreButtonText: {
+    color: theme.colors.white,
+    textAlign: "center",
+    fontSize: 18,
   }
 });
