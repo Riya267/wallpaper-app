@@ -2,28 +2,44 @@ import { theme } from '@/constants/theme';
 import { AntDesign } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { StatusBar, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
-import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
-import { getImageSize } from '@/util/helper';
+import { StatusBar, StyleSheet, View, TouchableOpacity, Platform } from 'react-native';
+import { width } from '@/util/helper';
+import { Image } from 'expo-image';
 
 export default function ImageModal() {
   const router = useRouter();
   const { imageUrl, imageHeight, imageWidth  } = useLocalSearchParams<{ imageUrl: string; imageHeight: string; imageWidth: string }>();
 
+  const getImageDimensions = () => {
+    const aspectRatio = Number(imageHeight) / Number(imageWidth);
+    const baseWidth = Platform.OS === "web" ? 0.50 : 0.90;
+    const baseHeight = Platform.OS === "web" ? 0.50 : 0.80;
+  
+    const calculatedWidth = width * baseWidth;
+    const calculatedHeight = width * baseHeight / aspectRatio;
+  
+    return aspectRatio < 1
+      ? { height: calculatedHeight, width: calculatedHeight * aspectRatio }
+      : { height: calculatedHeight, width: calculatedWidth };
+  };
+  
+
   return (
-    <BlurView intensity={70} tint="dark" style={styles.blurView}>
+    <BlurView intensity={100} tint="dark" style={styles.blurView}>
       <StatusBar
         animated
         backgroundColor={theme.colors.background}
         barStyle="light-content"
       />
       <View style={styles.container}>
-        <Image 
-          source={{ uri: imageUrl }}
-          style={[styles.image, { height: getImageSize(+imageHeight, +imageWidth) }]}
-          resizeMode="contain"
-        />
+        <View style={getImageDimensions()}>
+          <Image 
+            source={{ uri: imageUrl }}
+            style={[styles.image, getImageDimensions()]}
+            transition={1000}
+            contentFit='fill'
+          />
+        </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
             <AntDesign name='close' size={30} color={"white"}/>
@@ -50,14 +66,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: 400,
-    width: 300,
-    marginBottom: 20,
+    borderRadius: 20
   },
   iconContainer: {
+    display:"flex",
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '60%',
+    justifyContent: "space-evenly",
+    width: width*90/100,
+    marginTop: 20,
   },
   iconButton: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

@@ -22,7 +22,7 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
   }
 
   return (
-          <TouchableOpacity style={[styles.imageWrapper, !isLastInRow() && styles.spacing]} onPress={() => router.push({ pathname: "home/imageModal", params: { imageUrl: wallpaper.largeImageURL, imageHeight: wallpaper.imageHeight, imageWidth: wallpaper.imageWidth }})}>
+          <TouchableOpacity style={[styles.imageWrapper, !isLastInRow() && styles.spacing]} onPress={() => router.push({ pathname: "home/imageModal", params: { imageUrl: wallpaper.webformatURL, imageHeight: wallpaper.imageHeight, imageWidth: wallpaper.imageWidth }})}>
                 <Image 
                   source={wallpaper.webformatURL}
                   placeholder={wallpaper.tags}
