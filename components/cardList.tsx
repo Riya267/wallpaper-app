@@ -3,10 +3,10 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { AppContext, WallpaperInterface } from '@/context/appContext';
 import { MasonryFlashList } from "@shopify/flash-list";
 import Card from './card';
-import { getColumns, height } from '@/util/helper';
+import { getColumns } from '@/util/helper';
 import { theme } from '@/constants/theme';
 
-const CardList: React.FC = ()  => {
+const CardList: React.FC<any> = ({ router })  => {
   const { state, fetchWallpapers, setPage } = useContext(AppContext);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const CardList: React.FC = ()  => {
               numColumns={columns}
               data={state.wallpapers}
               renderItem={({ item, index }: { item: WallpaperInterface, index: number }) => (
-                  <Card wallpaper={item} index={index} columns={columns}/>
+                  <Card router={router} wallpaper={item} index={index} columns={columns}/>
               )}
               keyExtractor={(item) => item.id.toString()}
               estimatedItemSize={200}

@@ -7,11 +7,11 @@ import { Image } from 'expo-image';
 type CardProps = {
   wallpaper: WallpaperInterface,
   index: number,
-  columns: number
+  columns: number,
+  router: any
 }
 
-const Card: React.FC<CardProps> = ({ wallpaper, index, columns }) => {
-
+const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
   const isLastInRow = () => {
    return (index+1 % columns === 0)
   }
@@ -22,7 +22,7 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns }) => {
   }
 
   return (
-          <TouchableOpacity style={[styles.imageWrapper, !isLastInRow() && styles.spacing]}>
+          <TouchableOpacity style={[styles.imageWrapper, !isLastInRow() && styles.spacing]} onPress={() => router.push({ pathname: "home/imageModal", params: { imageUrl: wallpaper.largeImageURL, imageHeight: wallpaper.imageHeight, imageWidth: wallpaper.imageWidth }})}>
                 <Image 
                   source={wallpaper.webformatURL}
                   placeholder={wallpaper.tags}

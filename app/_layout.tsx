@@ -52,8 +52,16 @@ function RootLayoutNav() {
             options={{ headerShown: false }}
           />
           <Stack.Screen 
-            name="home" 
+            name="home/index" 
             options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+              name="home/imageModal" 
+              options={{ 
+              headerShown: false, 
+              presentation: "transparentModal",
+              animation: "fade",
+            }}
           />
         </Stack>
     </ContextProvider>

@@ -4,12 +4,14 @@ import CategoriesList from '@/components/categories';
 import FilterModal from '@/components/filterModal';
 import Header from '@/components/header';
 import { theme } from '@/constants/theme';
+import { useRouter } from 'expo-router';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function Home() {
+export default function Index() {
   const { top } = useSafeAreaInsets();
   const marginTop = top > 0 ? top : 30;
+  const router = useRouter();
 
   return (
     <View style={[styles.container, { marginTop }]}>
@@ -22,7 +24,7 @@ export default function Home() {
         <CategoriesList />
         <AppliedFiltersList />
         <View style={styles.imageGridContainer}>
-          <CardList />
+          <CardList router={router}/>
         </View>
         <FilterModal />
     </View>
