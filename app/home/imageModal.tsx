@@ -8,6 +8,7 @@ import { Image } from 'expo-image';
 import * as fileSystem from 'expo-file-system'
 import { useState } from 'react';
 import { shareAsync } from 'expo-sharing';
+import Toast from 'react-native-toast-message';
 
 export default function ImageModal() {
   const router = useRouter();
@@ -41,9 +42,19 @@ export default function ImageModal() {
     setLoadingState("download")
     const uri = await downloadImage();
     if(uri) {
-      Alert.alert("Image downloaded successfully")
-      router.back();
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Image Downloaded Successfully"
+      })
+    }else{
+      Toast.show({
+        type: "error",
+        text1: "Failed",
+        text2: "Image Download Failed"
+      })
     }
+    router.back();
   }
 
   const downloadImage = async () => {
@@ -76,18 +87,18 @@ export default function ImageModal() {
         </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
-            <AntDesign name='close' size={30} color={"white"}/>
+            <AntDesign name='close' size={25} color={"white"}/>
           </TouchableOpacity>
             {
               loadingState === "download" ? <ActivityIndicator color={"white"} style={styles.iconButton}/> :
               <TouchableOpacity onPress={() => handleDownload()} style={styles.iconButton}>
-                <AntDesign name='download' size={30} color={"white"}/>
+                <AntDesign name='download' size={25} color={"white"}/>
               </TouchableOpacity>
             }
           {
               loadingState === "share" ? <ActivityIndicator color={"white"} size={"small"} style={styles.iconButton}/> :
               <TouchableOpacity onPress={() => handleShare()} style={styles.iconButton}>
-                <AntDesign name='sharealt' size={30} color={"white"}/>
+                <AntDesign name='sharealt' size={25} color={"white"}/>
               </TouchableOpacity>
           }
         </View>
@@ -112,11 +123,11 @@ const styles = StyleSheet.create({
     display:"flex",
     flexDirection: 'row',
     justifyContent: "space-evenly",
-    width: width*90/100,
+    width: width*0.9,
     marginTop: 20,
   },
   iconButton: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     padding: 10,
     borderRadius: 15,
   },

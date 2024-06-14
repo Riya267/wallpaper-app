@@ -7,6 +7,7 @@ import { theme } from '@/constants/theme';
 import { useRouter } from 'expo-router';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 export default function Index() {
   const { top } = useSafeAreaInsets();
@@ -27,6 +28,7 @@ export default function Index() {
           <CardList router={router}/>
         </View>
         <FilterModal />
+        <Toast />
     </View>
       
   );
