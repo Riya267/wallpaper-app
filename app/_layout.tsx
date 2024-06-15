@@ -43,27 +43,20 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-
   return (
     <ContextProvider>
-        <Stack>
-          <Stack.Screen 
-            name="index" 
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen 
-            name="home/index" 
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen 
-              name="home/imageModal" 
-              options={{ 
-              headerShown: false, 
-              presentation: "transparentModal",
-              animation: "fade",
-            }}
-          />
-        </Stack>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="home/index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="home/imageModal"
+          options={{
+            headerShown: false,
+            presentation: 'transparentModal',
+            animation: 'fade',
+          }}
+        />
+      </Stack>
     </ContextProvider>
   );
 }

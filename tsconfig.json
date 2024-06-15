@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "strictNullChecks": true,
     "strict": true,
     "paths": {
       "@/*": [
@@ -8,6 +9,7 @@
       ]
     }
   },
+  "exclude": ["node_modules"],
   "include": [
     "**/*.ts",
     "**/*.tsx",

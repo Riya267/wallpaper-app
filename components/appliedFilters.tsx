@@ -1,25 +1,36 @@
 import React, { useContext } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { AppContext } from '@/context/appContext';
 import { theme } from '@/constants/theme';
 
 const AppliedFiltersList: React.FC = () => {
   const { state, removeFilter, setPage } = useContext(AppContext);
-  const appliedFiltersArray = (state.appliedFilters || []).flatMap(appliedFilter => appliedFilter.filterOptions);
+  const appliedFiltersArray = (state.appliedFilters || []).flatMap(
+    (appliedFilter) => appliedFilter.filterOptions
+  );
 
   const renderItem = ({ item }: { item: string }) => (
     <View style={styles.appliedFilterContainer}>
       <Text style={styles.filterLabel}>{item}</Text>
-      <TouchableOpacity onPress={() => handleFilterClear(item)} style={styles.closeIconContainer}>
+      <TouchableOpacity
+        onPress={() => handleFilterClear(item)}
+        style={styles.closeIconContainer}
+      >
         <AntDesign name="closecircle" size={20} color={theme.colors.gray} />
       </TouchableOpacity>
     </View>
   );
 
   const handleFilterClear = (filter: string) => {
-      removeFilter(filter);
-      setPage(1);
+    removeFilter(filter);
+    setPage(1);
   };
 
   return (
@@ -42,7 +53,7 @@ const keyExtractor = (item: string, index: number) => `${item}-${index}`;
 const styles = StyleSheet.create({
   container: {
     marginBottom: 10,
-    position: "relative"
+    position: 'relative',
   },
   listContainer: {
     paddingHorizontal: 20,
@@ -68,9 +79,9 @@ const styles = StyleSheet.create({
   },
   closeIconContainer: {
     marginLeft: 'auto',
-    position: "absolute",
+    position: 'absolute',
     top: -15,
-    left: -10
+    left: -10,
   },
 });
 

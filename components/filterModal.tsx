@@ -1,6 +1,13 @@
 import { AppContext } from '@/context/appContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, Modal, Button, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import filterOptions from '@/constants/filters';
@@ -12,48 +19,64 @@ export interface FilterOptionsInterface {
 }
 
 const FilterModal: React.FC = () => {
-  const { state, toggleFilterModalVisibility, setPage, setAppliedFilters } = useContext(AppContext);
-  const [ selectedFilters, setSelectedFilters ] = useState<Array<FilterOptionsInterface>>(state.appliedFilters || []);
+  const { state, toggleFilterModalVisibility, setPage, setAppliedFilters } =
+    useContext(AppContext);
+  const [selectedFilters, setSelectedFilters] = useState<
+    Array<FilterOptionsInterface>
+  >(state.appliedFilters || []);
 
   const onClose = () => {
     toggleFilterModalVisibility(false);
   };
 
   const handleSelectFilter = (filterKey: string, option: string) => {
-    setSelectedFilters(prevFilters => {
-      const index = prevFilters.findIndex(filter => filter.mappingKey === filterKey);
+    setSelectedFilters((prevFilters) => {
+      const index = prevFilters.findIndex(
+        (filter) => filter.mappingKey === filterKey
+      );
       const filter = prevFilters[index];
       const prevSelectedOptions = filter ? filter.filterOptions : [];
       const isSelected = prevSelectedOptions.includes(option);
       const newSelectedOptions = isSelected
-        ? prevSelectedOptions.filter(item => item !== option)
+        ? prevSelectedOptions.filter((item) => item !== option)
         : [...prevSelectedOptions, option];
-      
+
       const updatedFilters = [...prevFilters];
       if (filter) {
-        updatedFilters[index] = { ...filter, filterOptions: newSelectedOptions };
+        updatedFilters[index] = {
+          ...filter,
+          filterOptions: newSelectedOptions,
+        };
       } else {
-        updatedFilters.push({ filterLabel: filterOptions.find(f => f.mappingKey === filterKey)?.filterLabel || '', filterOptions: newSelectedOptions, mappingKey: filterKey });
+        updatedFilters.push({
+          filterLabel:
+            filterOptions.find((f) => f.mappingKey === filterKey)
+              ?.filterLabel || '',
+          filterOptions: newSelectedOptions,
+          mappingKey: filterKey,
+        });
       }
       return updatedFilters;
     });
   };
 
   useEffect(() => {
-      setSelectedFilters(state.appliedFilters || [])
-  },[state.appliedFilters])
+    setSelectedFilters(state.appliedFilters || []);
+  }, [state.appliedFilters]);
 
   const isSelected = (filterKey: string, option: string) => {
-    const filter = selectedFilters.find(filter => filter.mappingKey === filterKey);
+    const filter = selectedFilters.find(
+      (filter) => filter.mappingKey === filterKey
+    );
     return filter ? filter.filterOptions.includes(option) : false;
   };
 
-  const handleFetchWallpaper = (type: "clear" | "apply") => {
+  const handleFetchWallpaper = (type: 'clear' | 'apply') => {
     toggleFilterModalVisibility(false);
-    if (type === "clear") setAppliedFilters([]);
-    else setAppliedFilters(selectedFilters)
-    setPage(1)
-  }
+    if (type === 'clear') setAppliedFilters([]);
+    else setAppliedFilters(selectedFilters);
+    setPage(1);
+  };
 
   return (
     <Modal
@@ -79,18 +102,37 @@ const FilterModal: React.FC = () => {
                       style={[
                         styles.filterOption,
                         {
-                          borderColor: filter.filterLabel === "Color" ? option : theme.colors.pink,
-                          backgroundColor: filter.filterLabel === "Color" ? option : theme.colors.white,
-                          ...filter.filterLabel === "Color" && { paddingHorizontal: 10, paddingVertical: 0, marginRight: 15, height: 40, width: 40 },
-                        }
+                          borderColor:
+                            filter.filterLabel === 'Color'
+                              ? option
+                              : theme.colors.pink,
+                          backgroundColor:
+                            filter.filterLabel === 'Color'
+                              ? option
+                              : theme.colors.white,
+                          ...(filter.filterLabel === 'Color' && {
+                            paddingHorizontal: 10,
+                            paddingVertical: 0,
+                            marginRight: 15,
+                            height: 40,
+                            width: 40,
+                          }),
+                        },
                       ]}
-                      onPress={() => handleSelectFilter(filter.mappingKey, option)}
+                      onPress={() =>
+                        handleSelectFilter(filter.mappingKey, option)
+                      }
                     >
-                      {filter.filterLabel !== "Color" && (
+                      {filter.filterLabel !== 'Color' && (
                         <Text style={styles.filterOptionText}>{option}</Text>
                       )}
                       {isSelected(filter.mappingKey, option) && (
-                        <AntDesign name="check" size={20} color="purple" style={{ padding: 0}}/>
+                        <AntDesign
+                          name="check"
+                          size={20}
+                          color="purple"
+                          style={{ padding: 0 }}
+                        />
                       )}
                     </TouchableOpacity>
                   ))}
@@ -100,11 +142,36 @@ const FilterModal: React.FC = () => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <Pressable onPress={() => handleFetchWallpaper("clear")} style={styles.button}>
-              <Text style={{ color: theme.colors.background, fontSize: 20, fontWeight: "500" }}>Clear</Text>
+            <Pressable
+              onPress={() => handleFetchWallpaper('clear')}
+              style={styles.button}
+            >
+              <Text
+                style={{
+                  color: theme.colors.background,
+                  fontSize: 20,
+                  fontWeight: '500',
+                }}
+              >
+                Clear
+              </Text>
             </Pressable>
-            <Pressable onPress={() => handleFetchWallpaper("apply")} style={[styles.button, { backgroundColor: theme.colors.background }]}>
-              <Text style={{ color: theme.colors.white, fontSize: 20, fontWeight: "500" }}>Apply</Text>
+            <Pressable
+              onPress={() => handleFetchWallpaper('apply')}
+              style={[
+                styles.button,
+                { backgroundColor: theme.colors.background },
+              ]}
+            >
+              <Text
+                style={{
+                  color: theme.colors.white,
+                  fontSize: 20,
+                  fontWeight: '500',
+                }}
+              >
+                Apply
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -112,7 +179,6 @@ const FilterModal: React.FC = () => {
     </Modal>
   );
 };
-
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -157,30 +223,30 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 50,
     margin: 5,
-    alignItems: "center",
-    height: 50
+    alignItems: 'center',
+    height: 50,
   },
   filterOptionText: {
     color: theme.colors.pink,
     fontWeight: '500',
-    textAlign: "center"
+    textAlign: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10
+    marginTop: 10,
   },
   closeIcon: {
-    position: "absolute", 
-    top: 10, 
+    position: 'absolute',
+    top: 10,
     right: 10,
-    padding: 10
+    padding: 10,
   },
   button: {
-    paddingHorizontal: 20, 
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 20
-  }
+    borderRadius: 20,
+  },
 });
 
 export default FilterModal;

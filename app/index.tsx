@@ -1,7 +1,14 @@
 import { theme } from '@/constants/theme';
 import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
-import { StatusBar, StyleSheet, Text, TouchableOpacity, View, Image, Platform } from 'react-native';
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Index() {
@@ -16,16 +23,20 @@ export default function Index() {
         backgroundColor={theme.colors.background}
         barStyle="light-content"
       />
-      <Image 
+      <Image
         source={require('../assets/images/wallpapers.jpg')}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
       <BlurView intensity={115} tint="dark" style={styles.blurContainer}>
         <Text style={styles.description}>
-          Explore millions of cool wallpapers designed by top artists to elevate your device.
+          Explore millions of cool wallpapers designed by top artists to elevate
+          your device.
         </Text>
-        <TouchableOpacity style={styles.exploreButton} onPress={() => router.push("/home")}>
+        <TouchableOpacity
+          style={styles.exploreButton}
+          onPress={() => router.push('/home/')}
+        >
           <Text style={styles.exploreButtonText}>Get Started</Text>
         </TouchableOpacity>
       </BlurView>
@@ -36,7 +47,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end"
+    justifyContent: 'flex-end',
   },
   blurContainer: {
     padding: 20,
@@ -47,21 +58,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '900',
     color: theme.colors.white,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   backgroundImage: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
   },
   exploreButton: {
     backgroundColor: theme.colors.pink,
     padding: 15,
     borderRadius: 30,
     marginTop: 20,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   exploreButtonText: {
     color: theme.colors.white,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 18,
-  }
+  },
 });
