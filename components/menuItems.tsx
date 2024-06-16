@@ -57,7 +57,6 @@ const MenuItems: React.FC = () => {
 
 const styles = StyleSheet.create({
   menuItems: {
-    borderWidth: 2,
     borderRadius: 20,
     display: 'flex',
     flexDirection: 'row',

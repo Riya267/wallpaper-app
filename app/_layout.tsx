@@ -64,6 +64,22 @@ function RootLayoutNav() {
             animation: 'slide_from_left',
           }}
         />
+        <Stack.Screen
+          name="auth/login"
+          options={{
+            headerShown: false,
+            presentation: 'containedModal',
+            animation: 'slide_from_left',
+          }}
+        />
+        <Stack.Screen
+          name="auth/register"
+          options={{
+            headerShown: false,
+            presentation: 'containedModal',
+            animation: 'slide_from_left',
+          }}
+        />
       </Stack>
     </ContextProvider>
   );
