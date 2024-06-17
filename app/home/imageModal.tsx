@@ -8,7 +8,7 @@ import { Image } from 'expo-image';
 import * as fileSystem from 'expo-file-system'
 import { useState } from 'react';
 import { shareAsync } from 'expo-sharing';
-import Toast from 'react-native-toast-message';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 export default function ImageModal() {
   const router = useRouter();
@@ -43,15 +43,15 @@ export default function ImageModal() {
     const uri = await downloadImage();
     if(uri) {
       Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: "Image Downloaded Successfully"
+        type: ALERT_TYPE.SUCCESS,
+        title: "Success",
+        textBody: "Image Downloaded Successfully"
       })
     }else{
       Toast.show({
-        type: "error",
-        text1: "Failed",
-        text2: "Image Download Failed"
+        type: ALERT_TYPE.DANGER,
+        title: "Failed",
+        textBody: "Image Download Failed"
       })
     }
     router.back();

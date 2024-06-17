@@ -4,6 +4,12 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from 'react-native-alert-notification';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,42 +51,44 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <ContextProvider>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="home/index" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="home/imageModal"
-          options={{
-            headerShown: false,
-            presentation: 'transparentModal',
-            animation: 'fade',
-          }}
-        />
-        <Stack.Screen
-          name="drawer/index"
-          options={{
-            headerShown: false,
-            presentation: 'transparentModal',
-            animation: 'slide_from_left',
-          }}
-        />
-        <Stack.Screen
-          name="auth/login"
-          options={{
-            headerShown: false,
-            presentation: 'containedModal',
-            animation: 'slide_from_left',
-          }}
-        />
-        <Stack.Screen
-          name="auth/register"
-          options={{
-            headerShown: false,
-            presentation: 'containedModal',
-            animation: 'slide_from_left',
-          }}
-        />
-      </Stack>
+      <AlertNotificationRoot theme="dark">
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="home/index" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="home/imageModal"
+            options={{
+              headerShown: false,
+              presentation: 'transparentModal',
+              animation: 'fade',
+            }}
+          />
+          <Stack.Screen
+            name="drawer/index"
+            options={{
+              headerShown: false,
+              presentation: 'transparentModal',
+              animation: 'slide_from_left',
+            }}
+          />
+          <Stack.Screen
+            name="auth/login"
+            options={{
+              headerShown: false,
+              presentation: 'containedModal',
+              animation: 'slide_from_left',
+            }}
+          />
+          <Stack.Screen
+            name="auth/register"
+            options={{
+              headerShown: false,
+              presentation: 'containedModal',
+              animation: 'slide_from_left',
+            }}
+          />
+        </Stack>
+      </AlertNotificationRoot>
     </ContextProvider>
   );
 }

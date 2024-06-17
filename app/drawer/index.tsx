@@ -1,7 +1,9 @@
 import MenuItems from '@/components/menuItems';
 import { theme } from '@/constants/theme';
+import { AppContext } from '@/context/appContext';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useContext } from 'react';
 import { Pressable, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,8 +11,7 @@ export default function Index() {
   const { top } = useSafeAreaInsets();
   const marginTop = top > 0 ? top : 30;
   const router = useRouter();
-  console.log("drawer called")
-  const isLoggedIn = false;
+  const { state } = useContext(AppContext);
   const handleLogin = () => {
     router.push({ pathname: "/auth/login" } as never)
   }
@@ -28,7 +29,7 @@ export default function Index() {
       <View style={{ flex:1, padding: 15, marginTop: 10 }}>
         <View style={{ display: "flex", flexDirection:"row", alignItems: "center" }}> 
           <AntDesign name="user" size={30} color={theme.colors.gray}/>
-          { isLoggedIn ? 
+          { state.isLoggedIn ? 
             <Text style={{ color: theme.colors.white }}>Hi, {'Riya'}</Text>:
             <TouchableOpacity onPress={handleLogin}>
                 <Text style={{ color: theme.colors.white }}>Login</Text>

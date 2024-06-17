@@ -18,7 +18,12 @@ export interface WallpaperInterface {
   imageHeight: number;
 }
 
+interface UserInfo {
+  userName: string;
+}
 interface AppState {
+  isLoggedIn: boolean;
+  userInfo: UserInfo;
   page: number;
   perPage: number;
   queryString?: string;
@@ -41,13 +46,21 @@ interface AppContextProps {
   setPage: (page: number) => void;
   setShowMoreWallpapers: (hasMore: boolean) => void;
   setAppliedFilters: (selectedFilters: Array<FilterOptionsInterface>) => void;
+  signIn: () => void;
+  signOff: () => void;
 }
 
 interface AppProviderProps {
   children: ReactNode;
 }
 
+const initialUserInfo = {
+  userName: '',
+};
+
 const initialState = {
+  isLoggedIn: false,
+  userInfo: initialUserInfo,
   page: 1,
   perPage: 20,
   queryString: '',
@@ -70,10 +83,30 @@ export const AppContext = createContext<AppContextProps>({
   setPage: () => {},
   setShowMoreWallpapers: () => {},
   setAppliedFilters: () => {},
+  signIn: () => {},
+  signOff: () => {},
 });
 
 export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
+
+  const signIn = () => {
+    setState((prevState) => ({
+      ...prevState,
+      isLoggedIn: true,
+      userInfo: {
+        userName: 'Riya Dhawan',
+      },
+    }));
+  };
+
+  const signOff = () => {
+    setState((prevState) => ({
+      ...prevState,
+      isLoggedIn: false,
+      userInfo: initialUserInfo,
+    }));
+  };
 
   const removeFilter = (filter: string) => {
     setState((prevState) => ({
@@ -175,6 +208,8 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
         setPage,
         setShowMoreWallpapers,
         setAppliedFilters,
+        signIn,
+        signOff,
       }}
     >
       {children}

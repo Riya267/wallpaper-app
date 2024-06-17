@@ -2,7 +2,7 @@ import categories from '@/constants/categories';
 import { menuItems } from '@/constants/menuItems';
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
 import {
@@ -12,15 +12,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Toast, ALERT_TYPE } from 'react-native-alert-notification';
 
 const MenuItems: React.FC = () => {
   const router = useRouter();
-  const { state, setSelectedCategory, setPage } = useContext(AppContext);
+  const { state, signOff } = useContext(AppContext);
 
   const handleItemClick = (path: string, item: string) => {
     if (!path && item === 'Logout') {
-      // logout function
-    } else router.push({ pathname: path } as never);
+      signOff();
+    } else {
+      state.isLoggedIn
+        ? router.push({ pathname: path } as never)
+        : Toast.show({
+            type: ALERT_TYPE.INFO,
+            title: 'Login',
+            textBody: 'Please Login to access this screen',
+          });
+    }
   };
 
   return (
@@ -28,26 +37,29 @@ const MenuItems: React.FC = () => {
       <ScrollView scrollEnabled>
         {menuItems.map((menuItem) => {
           return (
-            <TouchableOpacity
-              style={styles.menuItems}
-              key={menuItem.item}
-              onPress={() => handleItemClick(menuItem.path, menuItem.item)}
-            >
-              <MaterialIcons
-                name={menuItem.icon as any}
-                size={24}
-                color={theme.colors.pink}
-              />
-              <Text
-                style={{
-                  color: theme.colors.white,
-                  fontWeight: '500',
-                  marginLeft: 5,
-                }}
+            !state.isLoggedIn &&
+            menuItem.item !== 'Logout' && (
+              <TouchableOpacity
+                style={styles.menuItems}
+                key={menuItem.item}
+                onPress={() => handleItemClick(menuItem.path, menuItem.item)}
               >
-                {menuItem.item}
-              </Text>
-            </TouchableOpacity>
+                <MaterialIcons
+                  name={menuItem.icon as any}
+                  size={24}
+                  color={theme.colors.pink}
+                />
+                <Text
+                  style={{
+                    color: theme.colors.white,
+                    fontWeight: '500',
+                    marginLeft: 5,
+                  }}
+                >
+                  {menuItem.item}
+                </Text>
+              </TouchableOpacity>
+            )
           );
         })}
       </ScrollView>
