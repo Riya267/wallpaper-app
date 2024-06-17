@@ -56,6 +56,14 @@ function RootLayoutNav() {
             animation: 'fade',
           }}
         />
+        <Stack.Screen
+          name="drawer/index"
+          options={{
+            headerShown: false,
+            presentation: 'transparentModal',
+            animation: 'slide_from_left',
+          }}
+        />
       </Stack>
     </ContextProvider>
   );

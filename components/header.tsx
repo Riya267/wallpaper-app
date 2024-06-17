@@ -1,11 +1,19 @@
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import { theme } from '@/constants/theme';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/appContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 
 const Header: React.FC = () => {
+  const router = useRouter();
   const { setQueryString, toggleFilterModalVisibility, setPage } =
     useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
@@ -36,6 +44,9 @@ const Header: React.FC = () => {
 
   return (
     <View style={styles.headerContainer}>
+      <Pressable onPress={() => router.push({ pathname: '/drawer/' })}>
+        <Ionicons name="menu" size={27} color={theme.colors.white} />
+      </Pressable>
       <View style={styles.searchBarContainer}>
         <View
           style={{
@@ -65,7 +76,7 @@ const Header: React.FC = () => {
         )}
       </View>
       <TouchableOpacity onPress={handleFilterClick} style={{ padding: 10 }}>
-        <Ionicons name="filter-sharp" size={30} color={theme.colors.white} />
+        <Feather name="filter" size={30} color={theme.colors.white} />
       </TouchableOpacity>
     </View>
   );
@@ -86,7 +97,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '85%',
+    width: '70%',
     height: 60,
     backgroundColor: theme.colors.white,
     marginVertical: 20,
