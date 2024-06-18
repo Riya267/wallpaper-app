@@ -64,6 +64,14 @@ function RootLayoutNav() {
             }}
           />
           <Stack.Screen
+            name="home/generate"
+            options={{
+              headerShown: false,
+              presentation: 'fullScreenModal',
+              animation: 'slide_from_right',
+            }}
+          />
+          <Stack.Screen
             name="drawer/index"
             options={{
               headerShown: false,

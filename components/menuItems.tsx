@@ -36,30 +36,30 @@ const MenuItems: React.FC = () => {
     <View style={{ marginVertical: 20 }}>
       <ScrollView scrollEnabled>
         {menuItems.map((menuItem) => {
+          if (!state.isLoggedIn && menuItem.item === 'Logout') {
+            return null;
+          }
           return (
-            !state.isLoggedIn &&
-            menuItem.item !== 'Logout' && (
-              <TouchableOpacity
-                style={styles.menuItems}
-                key={menuItem.item}
-                onPress={() => handleItemClick(menuItem.path, menuItem.item)}
+            <TouchableOpacity
+              style={styles.menuItems}
+              key={menuItem.item}
+              onPress={() => handleItemClick(menuItem.path, menuItem.item)}
+            >
+              <MaterialIcons
+                name={menuItem.icon as any}
+                size={24}
+                color={theme.colors.pink}
+              />
+              <Text
+                style={{
+                  color: theme.colors.white,
+                  fontWeight: '500',
+                  marginLeft: 5,
+                }}
               >
-                <MaterialIcons
-                  name={menuItem.icon as any}
-                  size={24}
-                  color={theme.colors.pink}
-                />
-                <Text
-                  style={{
-                    color: theme.colors.white,
-                    fontWeight: '500',
-                    marginLeft: 5,
-                  }}
-                >
-                  {menuItem.item}
-                </Text>
-              </TouchableOpacity>
-            )
+                {menuItem.item}
+              </Text>
+            </TouchableOpacity>
           );
         })}
       </ScrollView>

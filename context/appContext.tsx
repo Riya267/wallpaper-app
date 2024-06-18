@@ -59,7 +59,7 @@ const initialUserInfo = {
 };
 
 const initialState = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   userInfo: initialUserInfo,
   page: 1,
   perPage: 20,

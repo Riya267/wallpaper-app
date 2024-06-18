@@ -30,7 +30,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 300);
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -44,7 +44,7 @@ const Header: React.FC = () => {
 
   return (
     <View style={styles.headerContainer}>
-      <Pressable onPress={() => router.push({ pathname: '/drawer/' })}>
+      <Pressable onPress={() => router.push({ pathname: '/drawer/' } as never)}>
         <Ionicons name="menu" size={27} color={theme.colors.white} />
       </Pressable>
       <View style={styles.searchBarContainer}>
