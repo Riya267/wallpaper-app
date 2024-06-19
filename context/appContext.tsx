@@ -18,6 +18,10 @@ export interface WallpaperInterface {
   imageHeight: number;
 }
 
+export interface FavouritesInterface {
+  wallpaperIds: Array<number>;
+}
+
 interface AppState {
   isLoggedIn: boolean;
   userName: string;
@@ -31,8 +35,8 @@ interface AppState {
   loading: boolean;
   error: string | null;
   openfilterModal: boolean;
+  favourites: FavouritesInterface;
 }
-
 interface AppContextProps {
   state: AppState;
   fetchWallpapers: () => void;
@@ -45,6 +49,7 @@ interface AppContextProps {
   setAppliedFilters: (selectedFilters: Array<FilterOptionsInterface>) => void;
   signIn: (userName: string) => void;
   signOff: () => void;
+  updateFavourites: (favourites: FavouritesInterface) => void;
 }
 
 interface AppProviderProps {
@@ -64,6 +69,9 @@ const initialState = {
   openfilterModal: false,
   appliedfilters: [],
   scrollMoreWallpapers: true,
+  favourites: {
+    wallpaperIds: [],
+  },
 };
 
 export const AppContext = createContext<AppContextProps>({
@@ -78,10 +86,18 @@ export const AppContext = createContext<AppContextProps>({
   setAppliedFilters: () => {},
   signIn: () => {},
   signOff: () => {},
+  updateFavourites: () => {},
 });
 
 export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
+
+  const updateFavourites = (favourites: FavouritesInterface) => {
+    setState((prevState) => ({
+      ...prevState,
+      favourites: favourites,
+    }));
+  };
 
   const signIn = (userName: string) => {
     setState((prevState) => ({
@@ -201,6 +217,7 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
         setAppliedFilters,
         signIn,
         signOff,
+        updateFavourites,
       }}
     >
       {children}

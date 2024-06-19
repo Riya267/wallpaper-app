@@ -1,8 +1,13 @@
 import { theme } from '@/constants/theme';
-import { WallpaperInterface } from '@/context/appContext';
+import { AppContext, WallpaperInterface } from '@/context/appContext';
 import { getImageSize } from '@/util/helper';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Image } from 'expo-image';
+import { AntDesign } from '@expo/vector-icons';
+import { createDocument } from '@/util/auth';
+import { misc } from '@/constants/misc';
+import { auth } from '@/util/firebase';
+import { useContext, useEffect, useState } from 'react';
 
 type CardProps = {
   wallpaper: WallpaperInterface;
@@ -12,14 +17,52 @@ type CardProps = {
 };
 
 const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
+  const { state, updateFavourites } = useContext(AppContext);
+  const [isFavourite, setIsFavourite] = useState(
+    state.favourites.wallpaperIds.some(
+      (favouriteWallpaperId) => favouriteWallpaperId === wallpaper.id
+    )
+  );
+
   const isLastInRow = () => {
-    return index + (1 % columns) === 0;
+    return (index + 1) % columns === 0;
   };
 
   const getImageHeight = () => {
-    let { imageHeight, imageWidth } = wallpaper;
+    const { imageHeight, imageWidth } = wallpaper;
     return { height: getImageSize(imageHeight, imageWidth) };
   };
+
+  const handleAddToFavourite = async () => {
+    try {
+      const updatedWallpaperIds = isFavourite
+        ? state.favourites.wallpaperIds.filter(
+            (wallpaperId) => wallpaperId !== wallpaper.id
+          )
+        : [...(state.favourites.wallpaperIds || []), wallpaper.id];
+
+      const favouriteWallpaper = { wallpaperIds: updatedWallpaperIds };
+      console.log('favouriteWallpaper', favouriteWallpaper);
+
+      await createDocument(
+        misc.FAVOURITES_COLLECTION_NAME,
+        favouriteWallpaper,
+        auth.currentUser?.uid as string
+      );
+
+      updateFavourites({ wallpaperIds: favouriteWallpaper.wallpaperIds });
+      setIsFavourite(!isFavourite);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  useEffect(() => {
+    const isFav = state.favourites.wallpaperIds.some(
+      (favouriteWallpaperId) => favouriteWallpaperId === wallpaper.id
+    );
+    setIsFavourite(isFav);
+  }, [state.favourites.wallpaperIds, wallpaper.id]);
 
   return (
     <TouchableOpacity
@@ -35,6 +78,20 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
         })
       }
     >
+      {auth.currentUser?.uid && (
+        <TouchableOpacity
+          onPress={handleAddToFavourite}
+          style={styles.favouriteIconWrapper}
+        >
+          <View style={styles.favouriteIconBackground}>
+            <AntDesign
+              name={isFavourite ? 'heart' : 'hearto'}
+              size={20}
+              color={theme.colors.white}
+            />
+          </View>
+        </TouchableOpacity>
+      )}
       <Image
         source={wallpaper.webformatURL}
         placeholder={wallpaper.tags}
@@ -54,12 +111,25 @@ const styles = StyleSheet.create({
   imageWrapper: {
     backgroundColor: theme.colors.gray,
     borderRadius: 20,
-    borderCurve: 'continuous',
     overflow: 'hidden',
     marginBottom: 20,
+    position: 'relative',
   },
   spacing: {
     marginHorizontal: 5,
+  },
+  favouriteIconWrapper: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 10,
+  },
+  favouriteIconBackground: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 15,
+    padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
