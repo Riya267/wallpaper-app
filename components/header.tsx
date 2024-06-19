@@ -44,9 +44,6 @@ const Header: React.FC = () => {
 
   return (
     <View style={styles.headerContainer}>
-      <Pressable onPress={() => router.push({ pathname: '/drawer/' } as never)}>
-        <Ionicons name="menu" size={27} color={theme.colors.white} />
-      </Pressable>
       <View style={styles.searchBarContainer}>
         <View
           style={{
@@ -97,7 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '70%',
+    width: '80%',
     height: 60,
     backgroundColor: theme.colors.white,
     marginVertical: 20,

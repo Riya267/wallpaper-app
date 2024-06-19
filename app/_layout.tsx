@@ -1,15 +1,11 @@
 import { ContextProvider } from '@/context/appContext';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-  Toast,
-} from 'react-native-alert-notification';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Stack } from 'expo-router';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -52,49 +48,17 @@ function RootLayoutNav() {
   return (
     <ContextProvider>
       <AlertNotificationRoot theme="dark">
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="home/index" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="home/imageModal"
-            options={{
-              headerShown: false,
-              presentation: 'transparentModal',
-              animation: 'fade',
-            }}
-          />
-          <Stack.Screen
-            name="home/generate"
-            options={{
-              headerShown: false,
-              presentation: 'fullScreenModal',
-              animation: 'slide_from_right',
-            }}
-          />
-          <Stack.Screen
-            name="drawer/index"
-            options={{
-              headerShown: false,
-              presentation: 'transparentModal',
-              animation: 'slide_from_left',
-            }}
-          />
-          <Stack.Screen
-            name="auth/login"
-            options={{
-              headerShown: false,
-              presentation: 'containedModal',
-              animation: 'slide_from_left',
-            }}
-          />
-          <Stack.Screen
-            name="auth/register"
-            options={{
-              headerShown: false,
-              presentation: 'containedModal',
-              animation: 'slide_from_left',
-            }}
-          />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="home/imageModal" />
+          <Stack.Screen name="home/generate" />
+          <Stack.Screen name="auth/login" />
+          <Stack.Screen name="auth/register" />
         </Stack>
       </AlertNotificationRoot>
     </ContextProvider>

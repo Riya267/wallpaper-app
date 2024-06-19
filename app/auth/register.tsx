@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { theme } from '@/constants/theme';
 import { useRouter } from 'expo-router';
+import { register } from '@/util/auth';
 
 const RegisterSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -16,9 +17,14 @@ const RegisterSchema = Yup.object().shape({
 
 const Register = () => {
   const router = useRouter();
-  const handleLogin = () => {
+  const handleLoginClick = () => {
     router.push({ pathname: "/auth/login" } as never);
   };
+
+  const handleRegister = async (values: {email: string, password: string, userName:string}) => {
+    await register(values.email, values.password, values.userName)
+    console.log("values", values)
+ }
 
   return (
       <View style={styles.container}>
@@ -33,7 +39,7 @@ const Register = () => {
         initialValues={{ email: '', userName: '', password: '', confirmPassword: '' }}
         validationSchema={RegisterSchema}
         onSubmit={values => {
-          console.log(values);
+          handleRegister(values)
         }}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -90,7 +96,7 @@ const Register = () => {
           </View>
         )}
       </Formik>
-      <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
+      <TouchableOpacity onPress={handleLoginClick} style={styles.loginButton}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity> 
     </KeyboardAvoidingView>
@@ -121,6 +127,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 15,
     fontSize: 18,
+    color: theme.colors.white,
   },
   errorText: {
     color: 'red',

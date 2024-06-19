@@ -17,16 +17,16 @@ export default function Index() {
   }
   return (
     <View 
-    style={[styles.container, { marginTop }]}>
+      style={[styles.container, { marginTop }]}>
       <StatusBar
         animated={true}
         backgroundColor={theme.colors.background}
         barStyle={"light-content"}
       />
-      <Pressable style={{ alignSelf:"flex-end", margin:15 }} onPress={() => router.back()}>
-         <AntDesign name='arrowright' size={25} color={theme.colors.white} />
+      <Pressable style={{ alignSelf:"flex-start", margin:15 }} onPress={() => router.back()}>
+         <AntDesign name='arrowleft' size={25} color={theme.colors.white} />
       </Pressable>
-      <View style={{ flex:1, padding: 15, marginTop: 10 }}>
+      <View style={{ flex:1, padding: 15, marginTop: 10, marginRight: 10 }}>
         <View style={{ display: "flex", flexDirection:"row", alignItems: "center" }}> 
           <AntDesign name="user" size={30} color={theme.colors.gray}/>
           { state.isLoggedIn ? 
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: theme.colors.background,
-    width: "50%"
   },
   imageGridContainer: {
     flex: 1
