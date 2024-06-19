@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { theme } from '@/constants/theme';
@@ -17,89 +17,98 @@ const RegisterSchema = Yup.object().shape({
 
 const Register = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const handleLoginClick = () => {
     router.push({ pathname: "/auth/login" } as never);
   };
 
-  const handleRegister = async (values: {email: string, password: string, userName:string}) => {
-    await register(values.email, values.password, values.userName)
-    console.log("values", values)
- }
+  const handleRegister = async (values: { email: string, password: string, userName: string }, resetForm: any) => {
+    setLoading(true);
+    await register(values.email, values.password, values.userName);
+    setLoading(false);
+    resetForm(); // Reset the form values to their initial state
+    console.log("values", values);
+  }
 
   return (
-      <View style={styles.container}>
-        <KeyboardAvoidingView
-        style={{ flex: 3/4 }}
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 3 / 4 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-      <Text style={styles.title}>
-        Register to <Text style={styles.titleHighlight}>PixelGenie</Text>
-      </Text>
-      <Formik
-        initialValues={{ email: '', userName: '', password: '', confirmPassword: '' }}
-        validationSchema={RegisterSchema}
-        onSubmit={values => {
-          handleRegister(values)
-        }}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              value={values.email}
-              placeholderTextColor={theme.colors.gray}
-            />
-            {errors.email && touched.email ? (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            ) : null}
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              onChangeText={handleChange('userName')}
-              onBlur={handleBlur('userName')}
-              value={values.userName}
-              placeholderTextColor={theme.colors.gray}
-            />
-            {errors.userName && touched.userName ? (
-              <Text style={styles.errorText}>{errors.userName}</Text>
-            ) : null}
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-              placeholderTextColor={theme.colors.gray}
-            />
-            {errors.password && touched.password ? (
-              <Text style={styles.errorText}>{errors.password}</Text>
-            ) : null}
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm Password"
-              secureTextEntry
-              onChangeText={handleChange('confirmPassword')}
-              onBlur={handleBlur('confirmPassword')}
-              value={values.confirmPassword}
-              placeholderTextColor={theme.colors.gray}
-            />
-            {errors.confirmPassword && touched.confirmPassword ? (
-              <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-            ) : null}
-            <Pressable onPress={handleSubmit as (values: any) => void} style={styles.registerButton}>
-              <Text style={styles.buttonText}>Register</Text>
-            </Pressable>
-          </View>
-        )}
-      </Formik>
-      <TouchableOpacity onPress={handleLoginClick} style={styles.loginButton}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity> 
-    </KeyboardAvoidingView>
+        <Text style={styles.title}>
+          Register to <Text style={styles.titleHighlight}>PixelGenie</Text>
+        </Text>
+        <Formik
+          initialValues={{ email: '', userName: '', password: '', confirmPassword: '' }}
+          validationSchema={RegisterSchema}
+          onSubmit={(values, { resetForm }) => {
+            handleRegister(values, resetForm);
+          }}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            <View>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+                placeholderTextColor={theme.colors.gray}
+              />
+              {errors.email && touched.email ? (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              ) : null}
+              <TextInput
+                style={styles.input}
+                placeholder="Username"
+                onChangeText={handleChange('userName')}
+                onBlur={handleBlur('userName')}
+                value={values.userName}
+                placeholderTextColor={theme.colors.gray}
+              />
+              {errors.userName && touched.userName ? (
+                <Text style={styles.errorText}>{errors.userName}</Text>
+              ) : null}
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                placeholderTextColor={theme.colors.gray}
+              />
+              {errors.password && touched.password ? (
+                <Text style={styles.errorText}>{errors.password}</Text>
+              ) : null}
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm Password"
+                secureTextEntry
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                value={values.confirmPassword}
+                placeholderTextColor={theme.colors.gray}
+              />
+              {errors.confirmPassword && touched.confirmPassword ? (
+                <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+              ) : null}
+              <Pressable onPress={handleSubmit as (values: any) => void} style={styles.registerButton}>
+                {loading ? (
+                  <ActivityIndicator size="small" color={theme.colors.white} />
+                ) : (
+                  <Text style={styles.buttonText}>Register</Text>
+                )}
+              </Pressable>
+            </View>
+          )}
+        </Formik>
+        <TouchableOpacity onPress={handleLoginClick} style={styles.loginButton}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -140,6 +149,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.pink,
     backgroundColor: theme.colors.pink,
     marginBottom: 10,
+    alignItems: 'center',
   },
   loginButton: {
     padding: 15,

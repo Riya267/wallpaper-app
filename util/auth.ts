@@ -1,79 +1,140 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  UserCredential,
+  updateProfile,
+  User,
 } from 'firebase/auth';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import {
+  setDoc,
+  doc,
+  getDoc,
+  DocumentReference,
+  DocumentData,
+} from 'firebase/firestore';
 import db from './firebase';
 import { misc } from '@/constants/misc';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { auth } from '../util/firebase';
 
-const auth = getAuth();
+const showToast = (type: ALERT_TYPE, title: string, textBody: string) => {
+  Toast.show({
+    type,
+    title,
+    textBody,
+  });
+};
 
-export const createDocument = async (collectionName: string, data: any) => {
+export const createDocument = async (
+  collectionName: string,
+  data: DocumentData,
+  customId: string
+): Promise<void> => {
   try {
-    const docRef = await addDoc(collection(db, collectionName), data);
-    console.log('Document written with ID: ', docRef.id);
-  } catch (e) {
-    console.error('Error adding document: ', e);
+    await setDoc(doc(db, collectionName, customId), data);
+    console.log('Document written with ID:', customId);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error creating document:', error);
+    }
   }
 };
 
-export const getDocument = async (collectionName: string, userName: string) => {
+export const getDocument = async (
+  collectionName: string,
+  customId: string
+): Promise<DocumentData | null> => {
   try {
-    const querySnapshot = await getDocs(
-      query(collection(db, collectionName), where('userName', '==', userName))
+    const docRef: DocumentReference = doc(db, collectionName, customId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log('Document data:', docSnap.data());
+      return docSnap.data();
+    } else {
+      console.log('No such document!');
+      return null;
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error retrieving document:', error);
+      showToast(
+        ALERT_TYPE.DANGER,
+        'Document Retrieval Failed',
+        'Unable to retrieve document'
+      );
+      return null;
+    }
+    return null;
+  }
+};
+
+export const login = async (
+  email: string,
+  password: string
+): Promise<boolean | Record<string, string>> => {
+  try {
+    const userCredential: UserCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
     );
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data().userName}`);
-    });
-  } catch (e) {
-    console.error('Error adding document: ', e);
+    console.log('userObject', userCredential.user.displayName);
+    showToast(ALERT_TYPE.SUCCESS, 'SignIn', 'User Login successfully');
+    return true;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('signin error', error.message);
+      showToast(
+        ALERT_TYPE.DANGER,
+        'Invalid Credentials',
+        'Login failed due to invalid credentials'
+      );
+      return false;
+    }
+    return false;
   }
 };
 
-export const login = (email: string, password: string, userName) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      getDocument(misc.USER_COLLECTION_NAME);
-    })
-    .catch((error) => {
-      const errorMessage = error.message;
-      console.log('signin error', errorMessage);
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: 'Invalid Credentials',
-        textBody: 'Login failed due to invalid credentials',
-      });
-    });
+export const register = async (
+  email: string,
+  password: string,
+  userName: string
+): Promise<void> => {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(auth.currentUser as User, {
+      displayName: userName,
+    }).catch((err) => console.log(err));
+    showToast(
+      ALERT_TYPE.SUCCESS,
+      'Registration',
+      'User Registered successfully'
+    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('register error', error.message);
+      showToast(
+        ALERT_TYPE.DANGER,
+        'Something Went Wrong',
+        'Unable to register'
+      );
+    }
+  }
 };
 
-export const register = (email: string, password: string, userName: string) => {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      createDocument(misc.USER_COLLECTION_NAME, {
-        userName: userName,
-      });
-      login(email, password);
-    })
-    .catch((error) => {
-      const errorMessage = error.message;
-      console.log('register error', errorMessage);
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: 'Something Went Wrong',
-        textBody: 'Unable to register',
-      });
-    });
-};
-
-export const logout = () => {
-  signOut(auth)
-    .then(() => {
-      return true;
-    })
-    .catch((error) => {
+export const logout = async (): Promise<boolean> => {
+  try {
+    await signOut(auth);
+    console.log('Logout');
+    showToast(ALERT_TYPE.SUCCESS, 'SignOut', 'User Logout successfully');
+    return true;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('logout error', error.message);
+      showToast(ALERT_TYPE.DANGER, 'Something Went Wrong', 'Unable to logout');
       return false;
-    });
+    }
+    return false;
+  }
 };

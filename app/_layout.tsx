@@ -55,8 +55,15 @@ function RootLayoutNav() {
         >
           <Stack.Screen name="index" />
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="home/imageModal" />
+          <Stack.Screen
+            name="home/imageModal"
+            options={{
+              presentation: 'transparentModal',
+              animation: 'fade',
+            }}
+          />
           <Stack.Screen name="home/generate" />
+          <Stack.Screen name="home/favourite" />
           <Stack.Screen name="auth/login" />
           <Stack.Screen name="auth/register" />
         </Stack>

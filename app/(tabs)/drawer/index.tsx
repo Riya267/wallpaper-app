@@ -1,6 +1,7 @@
 import MenuItems from '@/components/menuItems';
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
+import { auth } from '@/util/firebase';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
@@ -15,6 +16,7 @@ export default function Index() {
   const handleLogin = () => {
     router.push({ pathname: "/auth/login" } as never)
   }
+  console.log("auth and user", auth.currentUser?.displayName, state.userName)
   return (
     <View 
       style={[styles.container, { marginTop }]}>
@@ -30,7 +32,7 @@ export default function Index() {
         <View style={{ display: "flex", flexDirection:"row", alignItems: "center" }}> 
           <AntDesign name="user" size={30} color={theme.colors.gray}/>
           { state.isLoggedIn ? 
-            <Text style={{ color: theme.colors.white }}>Hi, {'Riya'}</Text>:
+            <Text style={{ color: theme.colors.white }}>Hi, {state.userName}</Text>:
             <TouchableOpacity onPress={handleLogin}>
                 <Text style={{ color: theme.colors.white }}>Login</Text>
             </TouchableOpacity>

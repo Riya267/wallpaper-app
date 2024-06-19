@@ -18,12 +18,9 @@ export interface WallpaperInterface {
   imageHeight: number;
 }
 
-interface UserInfo {
-  userName: string;
-}
 interface AppState {
   isLoggedIn: boolean;
-  userInfo: UserInfo;
+  userName: string;
   page: number;
   perPage: number;
   queryString?: string;
@@ -46,7 +43,7 @@ interface AppContextProps {
   setPage: (page: number) => void;
   setShowMoreWallpapers: (hasMore: boolean) => void;
   setAppliedFilters: (selectedFilters: Array<FilterOptionsInterface>) => void;
-  signIn: () => void;
+  signIn: (userName: string) => void;
   signOff: () => void;
 }
 
@@ -54,13 +51,9 @@ interface AppProviderProps {
   children: ReactNode;
 }
 
-const initialUserInfo = {
-  userName: '',
-};
-
 const initialState = {
-  isLoggedIn: true,
-  userInfo: initialUserInfo,
+  isLoggedIn: false,
+  userName: '',
   page: 1,
   perPage: 20,
   queryString: '',
@@ -90,13 +83,11 @@ export const AppContext = createContext<AppContextProps>({
 export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
 
-  const signIn = () => {
+  const signIn = (userName: string) => {
     setState((prevState) => ({
       ...prevState,
       isLoggedIn: true,
-      userInfo: {
-        userName: 'Riya Dhawan',
-      },
+      userName: userName,
     }));
   };
 
@@ -104,7 +95,7 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
     setState((prevState) => ({
       ...prevState,
       isLoggedIn: false,
-      userInfo: initialUserInfo,
+      userName: '',
     }));
   };
 

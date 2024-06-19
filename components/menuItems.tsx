@@ -2,6 +2,7 @@ import categories from '@/constants/categories';
 import { menuItems } from '@/constants/menuItems';
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
+import { logout } from '@/util/auth';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
@@ -18,9 +19,10 @@ const MenuItems: React.FC = () => {
   const router = useRouter();
   const { state, signOff } = useContext(AppContext);
 
-  const handleItemClick = (path: string, item: string) => {
+  const handleItemClick = async (path: string, item: string) => {
     if (!path && item === 'Logout') {
-      signOff();
+      const isLoggedOut = await logout();
+      if (isLoggedOut) signOff();
     } else {
       state.isLoggedIn
         ? router.push({ pathname: path } as never)
