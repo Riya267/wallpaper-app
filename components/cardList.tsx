@@ -1,44 +1,31 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { AppContext, WallpaperInterface } from '@/context/appContext';
 import { MasonryFlashList } from '@shopify/flash-list';
 import Card from './card';
-import { getColumns } from '@/util/helper';
+import { WallpaperInterface } from '@/context/appContext';
 import { theme } from '@/constants/theme';
 
-const CardList: React.FC<any> = ({ router }) => {
-  const { state, fetchWallpapers, setPage } = useContext(AppContext);
+type CardListProps = {
+  router: any;
+  wallpapers: WallpaperInterface[];
+  loading: boolean;
+  columns: number;
+  loadMoreWallpapers?: () => void;
+};
 
-  useEffect(() => {
-    fetchWallpapers();
-  }, [
-    state.page,
-    state.queryString,
-    state.selectedCategory,
-    state.appliedFilters,
-  ]);
-
-  const columns = getColumns();
-
-  const loadMoreWallpapers = () => {
-    if (!state.loading && state.scrollMoreWallpapers) {
-      console.log('page', state.page);
-      setPage(state.page + 1);
-    }
-  };
-
+const CardList: React.FC<CardListProps> = ({
+  router,
+  wallpapers,
+  loading,
+  columns,
+  loadMoreWallpapers,
+}) => {
   return (
     <View style={styles.container}>
       <MasonryFlashList
         numColumns={columns}
-        data={state.wallpapers}
-        renderItem={({
-          item,
-          index,
-        }: {
-          item: WallpaperInterface;
-          index: number;
-        }) => (
+        data={wallpapers}
+        renderItem={({ item, index }) => (
           <Card
             router={router}
             wallpaper={item}
@@ -54,7 +41,7 @@ const CardList: React.FC<any> = ({ router }) => {
         onEndReached={loadMoreWallpapers}
         onEndReachedThreshold={0.5}
         ListFooterComponent={
-          state.loading ? (
+          loading ? (
             <ActivityIndicator color={theme.colors.pink} size={30} />
           ) : null
         }

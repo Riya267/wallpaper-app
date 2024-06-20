@@ -19,8 +19,8 @@ type CardProps = {
 const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
   const { state, updateFavourites } = useContext(AppContext);
   const [isFavourite, setIsFavourite] = useState(
-    state.favourites.wallpaperIds.some(
-      (favouriteWallpaperId) => favouriteWallpaperId === wallpaper.id
+    state.favourites.wallpapers?.some(
+      (favouriteWallpaper) => favouriteWallpaper.id === wallpaper.id
     )
   );
 
@@ -35,13 +35,13 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
 
   const handleAddToFavourite = async () => {
     try {
-      const updatedWallpaperIds = isFavourite
-        ? state.favourites.wallpaperIds.filter(
-            (wallpaperId) => wallpaperId !== wallpaper.id
+      const updatedWallpapers = isFavourite
+        ? state.favourites.wallpapers?.filter(
+            (favWallpaper) => favWallpaper.id !== wallpaper.id
           )
-        : [...(state.favourites.wallpaperIds || []), wallpaper.id];
+        : [...(state.favourites.wallpapers || []), wallpaper];
 
-      const favouriteWallpaper = { wallpaperIds: updatedWallpaperIds };
+      const favouriteWallpaper = { wallpapers: updatedWallpapers };
       console.log('favouriteWallpaper', favouriteWallpaper);
 
       await createDocument(
@@ -50,7 +50,9 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
         auth.currentUser?.uid as string
       );
 
-      updateFavourites({ wallpaperIds: favouriteWallpaper.wallpaperIds });
+      updateFavourites({
+        wallpapers: favouriteWallpaper.wallpapers as Array<WallpaperInterface>,
+      });
       setIsFavourite(!isFavourite);
     } catch (error) {
       console.log('error', error);
@@ -58,11 +60,11 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
   };
 
   useEffect(() => {
-    const isFav = state.favourites.wallpaperIds.some(
-      (favouriteWallpaperId) => favouriteWallpaperId === wallpaper.id
+    const isFav = state.favourites.wallpapers?.some(
+      (favouriteWallpapers) => favouriteWallpapers.id === wallpaper.id
     );
     setIsFavourite(isFav);
-  }, [state.favourites.wallpaperIds, wallpaper.id]);
+  }, [state.favourites.wallpapers, wallpaper.id]);
 
   return (
     <TouchableOpacity

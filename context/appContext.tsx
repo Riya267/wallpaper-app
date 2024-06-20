@@ -5,21 +5,14 @@ import { FilterOptionsInterface } from '@/components/filterModal';
 export interface WallpaperInterface {
   id: number;
   pageURL: string;
-  type: string;
-  tags: string;
   previewURL: string;
-  previewWidth: number;
-  previewHeight: number;
+  tags: string;
   webformatURL: string;
-  webformatWidth: number;
-  webformatHeight: number;
-  largeImageURL: string;
   imageWidth: number;
   imageHeight: number;
 }
-
 export interface FavouritesInterface {
-  wallpaperIds: Array<number>;
+  wallpapers: Array<WallpaperInterface>;
 }
 
 interface AppState {
@@ -70,7 +63,7 @@ const initialState = {
   appliedfilters: [],
   scrollMoreWallpapers: true,
   favourites: {
-    wallpaperIds: [],
+    wallpapers: [],
   },
 };
 

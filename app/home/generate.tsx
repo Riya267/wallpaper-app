@@ -1,6 +1,6 @@
 import ImageViewer from '@/components/imageViewer';
 import { theme } from '@/constants/theme';
-import ImageService from '@/util/image.service';
+import ImageService from '@/util/imageService';
 import { useState } from 'react';
 import { Pressable, StatusBar, StyleSheet, TextInput, View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

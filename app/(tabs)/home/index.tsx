@@ -1,11 +1,11 @@
 import AppliedFiltersList from '@/components/appliedFilters';
-import CardList from '@/components/cardList';
+import CardListContainer from '@/components/cardListContainer';
 import CategoriesList from '@/components/categories';
 import FilterModal from '@/components/filterModal';
 import Header from '@/components/header';
 import { misc } from '@/constants/misc';
 import { theme } from '@/constants/theme';
-import { AppContext } from '@/context/appContext';
+import { AppContext, FavouritesInterface } from '@/context/appContext';
 import { getDocument } from '@/util/auth';
 import { auth } from '@/util/firebase';
 import { useRouter } from 'expo-router';
@@ -22,11 +22,8 @@ export default function Index() {
   useEffect(() => {
     if(auth.currentUser?.uid) {
       async function fetchWallpapersAndUpdateState() {
-        const favouriteWallpaperIds = await getDocument(misc.FAVOURITES_COLLECTION_NAME, auth.currentUser?.uid as string);
-        console.log("favourites", favouriteWallpaperIds)
-        updateFavourites({
-          wallpaperIds: favouriteWallpaperIds?.wallpaperIds as Array<number>    
-        })
+        const favouriteWallpapers = await getDocument(misc.FAVOURITES_COLLECTION_NAME, auth.currentUser?.uid as string);
+        updateFavourites(favouriteWallpapers as FavouritesInterface)
       }
       fetchWallpapersAndUpdateState();
     }
@@ -43,7 +40,7 @@ export default function Index() {
         <CategoriesList />
         <AppliedFiltersList />
         <View style={styles.imageGridContainer}>
-          <CardList router={router}/>
+          <CardListContainer />
         </View>
         <FilterModal />
     </View>
