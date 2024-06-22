@@ -9,6 +9,7 @@ import { AppContext, FavouritesInterface } from '@/context/appContext';
 import { getDocument } from '@/util/auth';
 import { auth } from '@/util/firebase';
 import { useRouter } from 'expo-router';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useContext, useEffect } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,17 +18,21 @@ export default function Index() {
   const { top } = useSafeAreaInsets();
   const marginTop = top > 0 ? top : 30;
   const router = useRouter();
-  const { updateFavourites } = useContext(AppContext);
+  const { state, signIn, updateFavourites } = useContext(AppContext);
   
   useEffect(() => {
-    if(auth.currentUser?.uid) {
-      async function fetchWallpapersAndUpdateState() {
-        const favouriteWallpapers = await getDocument(misc.FAVOURITES_COLLECTION_NAME, auth.currentUser?.uid as string);
-        updateFavourites(favouriteWallpapers as FavouritesInterface)
+    onAuthStateChanged(auth, (user) => {
+      console.log("USER IS STILL LOGGED IN: " , user);
+      if (user) {
+        signIn(user.displayName!)
+        async function fetchWallpapersAndUpdateState() {
+          const favouriteWallpapers = await getDocument(misc.FAVOURITES_COLLECTION_NAME, auth.currentUser?.uid as string);
+          updateFavourites(favouriteWallpapers as FavouritesInterface)
+        }
+        fetchWallpapersAndUpdateState();
       }
-      fetchWallpapersAndUpdateState();
-    }
-  }, [])
+    });
+  }, [state.isLoggedIn]);
   
   return (
     <View style={[styles.container, { marginTop }]}>

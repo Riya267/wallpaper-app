@@ -14,7 +14,6 @@ import {
   DocumentData,
 } from 'firebase/firestore';
 import db from './firebase';
-import { misc } from '@/constants/misc';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { auth } from '../util/firebase';
 
