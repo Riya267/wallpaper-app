@@ -40,7 +40,7 @@ export default function Index() {
         <CategoriesList />
         <AppliedFiltersList />
         <View style={styles.imageGridContainer}>
-          <CardListContainer />
+          <CardListContainer router={router}/>
         </View>
         <FilterModal />
     </View>

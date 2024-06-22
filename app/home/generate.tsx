@@ -1,13 +1,16 @@
 import ImageViewer from '@/components/imageViewer';
 import { theme } from '@/constants/theme';
 import ImageService from '@/util/imageService';
+import { AntDesign } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StatusBar, StyleSheet, TextInput, View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function GenerateImage() {
-  const [ prompt, setPrompt] = useState("");
-  const [ image, setImage ] = useState("");
+  const router = useRouter();
+  const [prompt, setPrompt] = useState("");
+  const [image, setImage] = useState("");
   const { top } = useSafeAreaInsets();
   const marginTop = top > 0 ? top : 30;
 
@@ -24,24 +27,29 @@ export default function GenerateImage() {
         backgroundColor={theme.colors.background}
         barStyle={"light-content"}
       />
-      <Text style={styles.title}>Transform Your Text into Images With <Text style={styles.titleHighlight}>PixelGenie</Text></Text>
-      <View style={{ marginVertical: 10 }}>
-        <TextInput
-            style={styles.textInput}
-            placeholder="Enter prompt..."
-            multiline
-            numberOfLines={2}
-            value={prompt}
-            onChangeText={setPrompt}
-            placeholderTextColor={theme.colors.gray}
-        />
-        <Pressable style={styles.generateButton} onPress={() => handleImageGenerate()}>
-           <Text style={styles.buttonText}>Generate Image</Text>
+      <View style={styles.header}>
+        <Pressable onPress={() => router.back()}>
+          <AntDesign name="arrowleft" size={24} color={theme.colors.white} />
         </Pressable>
-        <View style={{ marginTop: 20 }}>
-          { 
-            image && <ImageViewer imageUrl={image} imageHeight={'400'} imageWidth={'400'} />
-          }
+        <Text style={styles.headerTitle}>GenerateImage</Text>
+        <View></View>
+      </View>
+      <Text style={styles.title}>Transform Your Text into Images With <Text style={styles.titleHighlight}>PixelGenie</Text></Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter prompt..."
+          multiline
+          numberOfLines={2}
+          value={prompt}
+          onChangeText={setPrompt}
+          placeholderTextColor={theme.colors.gray}
+        />
+        <Pressable style={styles.generateButton} onPress={handleImageGenerate}>
+          <Text style={styles.buttonText}>Generate Image</Text>
+        </Pressable>
+        <View style={styles.imageContainer}>
+          {image && <ImageViewer imageUrl={image} imageHeight={'400'} imageWidth={'400'} />}
         </View>
       </View>
     </View>
@@ -54,8 +62,20 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: theme.colors.background,
     padding: 10,
-    alignItems: "center",
-    justifyContent: "center"
+    paddingTop: 15,
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 10,
+  },
+  headerTitle: {
+    color: theme.colors.white,
+    fontWeight: "600",
+    fontSize: 18,
+    alignSelf: "center",
   },
   title: {
     textAlign: "center",
@@ -63,8 +83,11 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     marginBottom: 20,
   },
-  titleHighlight:{
+  titleHighlight: {
     color: theme.colors.pink,
+  },
+  inputContainer: {
+    marginVertical: 10,
   },
   textInput: {
     borderWidth: 2,
@@ -81,11 +104,15 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderRadius: 20,
     width: "40%",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   buttonText: {
     color: theme.colors.white,
     fontSize: 15,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  imageContainer: {
+    marginTop: 20,
+  },
 });

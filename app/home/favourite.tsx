@@ -4,9 +4,10 @@ import { theme } from '@/constants/theme';
 import { AppContext, FavouritesInterface } from '@/context/appContext';
 import { getDocument } from '@/util/auth';
 import { auth } from '@/util/firebase';
+import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, View, Text } from 'react-native';
+import { StatusBar, StyleSheet, View, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Favourites() {
@@ -31,7 +32,13 @@ export default function Favourites() {
         backgroundColor={theme.colors.background}
         barStyle={"light-content"}
       />
-      <Text style={{ color: theme.colors.white, fontWeight: "600", fontSize: 18 }}>Favourites</Text>
+       <View style={styles.header}>
+        <Pressable onPress={() => router.back()}>
+          <AntDesign name="arrowleft" size={24} color={theme.colors.white} />
+        </Pressable>
+        <Text style={styles.headerTitle}>Favourites</Text>
+        <View></View>
+      </View>
       <View style={{ flex: 1, width: "100%" }}>
         <CardList router={router} wallpapers={state.favourites.wallpapers} loading={false} columns={2}  />
       </View>
@@ -47,5 +54,18 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     alignItems: "center",
     justifyContent: "center"
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 10,
+  },
+  headerTitle: {
+    color: theme.colors.white,
+    fontWeight: "600",
+    fontSize: 18,
+    alignSelf: "center",
   },
 });
