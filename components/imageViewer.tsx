@@ -20,6 +20,19 @@ interface ImageViewerProps {
   imageWidth: string;
 }
 
+export const getImageDimensions = (imageHeight: string, imageWidth: string) => {
+  const aspectRatio = Number(imageHeight) / Number(imageWidth);
+  const baseWidth = Platform.OS === 'web' ? 0.5 : 0.9;
+  const baseHeight = Platform.OS === 'web' ? 0.5 : 0.8;
+
+  const calculatedWidth = width * baseWidth;
+  const calculatedHeight = (width * baseHeight) / aspectRatio;
+
+  return aspectRatio < 1
+    ? { height: calculatedHeight, width: calculatedHeight * aspectRatio }
+    : { height: calculatedHeight, width: calculatedWidth };
+};
+
 const ImageViewer: React.FC<ImageViewerProps> = ({
   imageUrl,
   imageHeight,
@@ -27,19 +40,6 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
 }) => {
   const router = useRouter();
   const [loadingState, setLoadingState] = useState('');
-
-  const getImageDimensions = () => {
-    const aspectRatio = Number(imageHeight) / Number(imageWidth);
-    const baseWidth = Platform.OS === 'web' ? 0.5 : 0.9;
-    const baseHeight = Platform.OS === 'web' ? 0.5 : 0.8;
-
-    const calculatedWidth = width * baseWidth;
-    const calculatedHeight = (width * baseHeight) / aspectRatio;
-
-    return aspectRatio < 1
-      ? { height: calculatedHeight, width: calculatedHeight * aspectRatio }
-      : { height: calculatedHeight, width: calculatedWidth };
-  };
 
   const filePath = `${fileSystem.documentDirectory}${imageUrl?.split('/').pop()}`;
 
@@ -80,13 +80,13 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
       return null;
     }
   };
-
+  console.log('imageViewer Props', imageUrl);
   return (
     <View style={styles.container}>
-      <View style={getImageDimensions()}>
+      <View style={getImageDimensions(imageHeight, imageWidth)}>
         <Image
           source={{ uri: imageUrl }}
-          style={[styles.image, getImageDimensions()]}
+          style={[styles.image, getImageDimensions(imageHeight, imageWidth)]}
           transition={1000}
           contentFit="fill"
           onLoad={() => setLoadingState('')}

@@ -1,6 +1,10 @@
-import { ReactNode, createContext, useState } from 'react';
+import { ReactNode, createContext, useEffect, useState } from 'react';
 import { getAllWallpapers } from '../util/api';
 import { FilterOptionsInterface } from '@/components/filterModal';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/util/firebase';
+import { getDocument } from '@/util/auth';
+import { misc } from '@/constants/misc';
 
 export interface WallpaperInterface {
   id: number;
@@ -14,7 +18,6 @@ export interface WallpaperInterface {
 export interface FavouritesInterface {
   wallpapers: Array<WallpaperInterface>;
 }
-
 interface AppState {
   isLoggedIn: boolean;
   userName: string;
@@ -29,6 +32,8 @@ interface AppState {
   error: string | null;
   openfilterModal: boolean;
   favourites: FavouritesInterface;
+  openReauthicateModal: boolean;
+  isLoggedInStateonAuthUpdated: boolean;
 }
 interface AppContextProps {
   state: AppState;
@@ -43,6 +48,8 @@ interface AppContextProps {
   signIn: (userName: string) => void;
   signOff: () => void;
   updateFavourites: (favourites: FavouritesInterface) => void;
+  toggleReauthicateModalVisibility: (toggle: boolean) => void;
+  setLoggedInStateOnAuthChange: () => void;
 }
 
 interface AppProviderProps {
@@ -65,6 +72,8 @@ const initialState = {
   favourites: {
     wallpapers: [],
   },
+  openReauthicateModal: false,
+  isLoggedInStateonAuthUpdated: false,
 };
 
 export const AppContext = createContext<AppContextProps>({
@@ -80,10 +89,39 @@ export const AppContext = createContext<AppContextProps>({
   signIn: () => {},
   signOff: () => {},
   updateFavourites: () => {},
+  toggleReauthicateModalVisibility: () => {},
+  setLoggedInStateOnAuthChange: () => {},
 });
 
 export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
+
+  const setLoggedInStateOnAuthChange = () => {
+    console.log('setLoggedInStateOnAuthChange', state.isLoggedIn);
+    signIn(auth.currentUser?.displayName!);
+    if (state.isLoggedIn) {
+      async function fetchWallpapersAndUpdateState() {
+        const favouriteWallpapers = await getDocument(
+          misc.FAVOURITES_COLLECTION_NAME,
+          auth.currentUser?.uid as string
+        );
+        if (favouriteWallpapers)
+          updateFavourites(favouriteWallpapers as FavouritesInterface);
+      }
+      fetchWallpapersAndUpdateState();
+    }
+    setState((prevState) => ({
+      ...prevState,
+      isLoggedInStateonAuthUpdated: true,
+    }));
+  };
+
+  const toggleReauthicateModalVisibility = (toggle: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      openReauthicateModal: toggle,
+    }));
+  };
 
   const updateFavourites = (favourites: FavouritesInterface) => {
     setState((prevState) => ({
@@ -196,10 +234,22 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
     setState((prevState) => ({ ...prevState, openfilterModal: toggle }));
   };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log('onAuthStateChanged unsubscribe', user);
+      if (!user) {
+        setState(initialState);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
         state,
+        setLoggedInStateOnAuthChange,
         fetchWallpapers,
         toggleFilterModalVisibility,
         removeFilter,
@@ -211,6 +261,7 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
         signIn,
         signOff,
         updateFavourites,
+        toggleReauthicateModalVisibility,
       }}
     >
       {children}

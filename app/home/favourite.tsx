@@ -4,7 +4,7 @@ import { AppContext } from '@/context/appContext';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext} from 'react';
-import { StatusBar, StyleSheet, View, Text, Pressable } from 'react-native';
+import { StatusBar, StyleSheet, View, Text, Pressable, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Favourites() {
@@ -28,7 +28,15 @@ export default function Favourites() {
         <View></View>
       </View>
       <View style={{ flex: 1, width: "100%" }}>
+        {state.favourites.wallpapers?.length > 0 ?
         <CardList router={router} wallpapers={state.favourites.wallpapers} loading={false} columns={2}  />
+        : <View style={{display: "flex", justifyContent: "center", alignItems: "center", flex: 0.9 }}>
+             <Text style={{ color: theme.colors.white }}>You have not saved any favourite wallpapers</Text>
+             <TouchableOpacity style={{ backgroundColor: theme.colors.pink, paddingVertical: 10, paddingHorizontal: 20, marginVertical: 25, borderRadius: 20 }} onPress={()=>router.push("/(tabs)/home/")}>
+                <Text style={{ color: theme.colors.white }} >View Wallpapers</Text>
+             </TouchableOpacity>
+        </View>
+        }  
       </View>
     </View>
   );

@@ -5,6 +5,10 @@ import {
   UserCredential,
   updateProfile,
   User,
+  deleteUser,
+  reauthenticateWithCredential,
+  AuthCredential,
+  EmailAuthProvider,
 } from 'firebase/auth';
 import {
   setDoc,
@@ -14,7 +18,7 @@ import {
   DocumentData,
 } from 'firebase/firestore';
 import db from './firebase';
-import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { ALERT_TYPE, Dialog, Toast } from 'react-native-alert-notification';
 import { auth } from '../util/firebase';
 
 const showToast = (type: ALERT_TYPE, title: string, textBody: string) => {
@@ -104,7 +108,7 @@ export const register = async (
     await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(auth.currentUser as User, {
       displayName: userName,
-    }).catch((err) => console.log(err));
+    }).catch((err) => console.log('updateProfile', err));
     showToast(
       ALERT_TYPE.SUCCESS,
       'Registration',
@@ -134,6 +138,68 @@ export const logout = async (): Promise<boolean> => {
       showToast(ALERT_TYPE.DANGER, 'Something Went Wrong', 'Unable to logout');
       return false;
     }
+    return false;
+  }
+};
+
+export const removeUser = async () => {
+  try {
+    Dialog.show({
+      type: ALERT_TYPE.DANGER,
+      title: 'Delete User',
+      textBody: 'Are you sure you want to delete this user?',
+      button: 'yes',
+      onPressButton: async () => {
+        if (auth.currentUser) {
+          await auth.currentUser?.delete();
+          console.log('auth user', auth.currentUser);
+          showToast(ALERT_TYPE.SUCCESS, 'Delete', 'User deleted successfully');
+          Dialog.hide();
+          return true;
+        } else {
+          showToast(
+            ALERT_TYPE.DANGER,
+            'Something Went Wrong',
+            'No current user to delete'
+          );
+          return false;
+        }
+      },
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      showToast(
+        ALERT_TYPE.DANGER,
+        'Something Went Wrong',
+        'Unable to delete user'
+      );
+    } else {
+      showToast(
+        ALERT_TYPE.DANGER,
+        'Something Went Wrong',
+        'An unknown error occurred'
+      );
+    }
+    return false;
+  }
+};
+
+export const reauthenticateUser = (password: string) => {
+  try {
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser?.email!,
+      password
+    );
+    console.log('credential', credential);
+    return reauthenticateWithCredential(auth.currentUser!, credential)
+      .then(() => {
+        console.log('reauthenticateWithCredential');
+        return true;
+      })
+      .catch((error) => {
+        return false;
+      });
+  } catch (error) {
     return false;
   }
 };

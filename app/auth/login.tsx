@@ -1,19 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { theme } from '@/constants/theme';
 import { useRouter } from 'expo-router';
-import { getDocument, login } from '@/util/auth';
-import { misc } from '@/constants/misc';
+import { login } from '@/util/auth';
 import { AppContext } from '@/context/appContext';
-import { User, UserInfo } from 'firebase/auth';
 import { auth } from '@/util/firebase';
-
-const LoginSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().min(6, 'Password too short!').required('Required'),
-});
+import LoginForm from '@/components/loginForm';
 
 const Login = () => {
   const router = useRouter();
@@ -43,48 +35,7 @@ const Login = () => {
         <Text style={styles.title}>
           Login to <Text style={styles.titleHighlight}>PixelGenie</Text>
         </Text>
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={LoginSchema}
-          onSubmit={values => {
-            handleLogin(values);
-          }}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                placeholderTextColor={theme.colors.gray}
-              />
-              {errors.email && touched.email ? (
-                <Text style={styles.errorText}>{errors.email}</Text>
-              ) : null}
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                placeholderTextColor={theme.colors.gray}
-              />
-              {errors.password && touched.password ? (
-                <Text style={styles.errorText}>{errors.password}</Text>
-              ) : null}
-              <Pressable onPress={handleSubmit as (values: any) => void} style={styles.loginButton}>
-                {loading ? (
-                  <ActivityIndicator size="small" color={theme.colors.white} />
-                ) : (
-                  <Text style={styles.buttonText}>Login</Text>
-                )}
-              </Pressable>
-            </View>
-          )}
-        </Formik>
+        <LoginForm isLoading={loading} handleLogin={handleLogin}/>
         <TouchableOpacity onPress={handleRegisterClick} style={styles.registerButton}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>

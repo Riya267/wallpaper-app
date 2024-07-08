@@ -18,20 +18,10 @@ export default function Index() {
   const { top } = useSafeAreaInsets();
   const marginTop = top > 0 ? top : 30;
   const router = useRouter();
-  const { state, signIn, updateFavourites } = useContext(AppContext);
+  const { state, setLoggedInStateOnAuthChange } = useContext(AppContext);
   
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      console.log("USER IS STILL LOGGED IN: " , user);
-      if (user) {
-        signIn(user.displayName!)
-        async function fetchWallpapersAndUpdateState() {
-          const favouriteWallpapers = await getDocument(misc.FAVOURITES_COLLECTION_NAME, auth.currentUser?.uid as string);
-          updateFavourites(favouriteWallpapers as FavouritesInterface)
-        }
-        fetchWallpapersAndUpdateState();
-      }
-    });
+      if(state.isLoggedInStateonAuthUpdated) setLoggedInStateOnAuthChange();
   }, [state.isLoggedIn]);
   
   return (

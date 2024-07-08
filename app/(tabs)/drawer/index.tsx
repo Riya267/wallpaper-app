@@ -1,10 +1,12 @@
 import MenuItems from '@/components/menuItems';
+import ReauthenticateModal from '@/components/reauthicateModal';
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
 import { auth } from '@/util/firebase';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useContext } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useContext, useEffect } from 'react';
 import { Pressable, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,11 +14,16 @@ export default function Index() {
   const { top } = useSafeAreaInsets();
   const marginTop = top > 0 ? top : 30;
   const router = useRouter();
-  const { state } = useContext(AppContext);
+  const { state, setLoggedInStateOnAuthChange } = useContext(AppContext);
   const handleLogin = () => {
     router.push({ pathname: "/auth/login" } as never)
   }
-  console.log("auth and user", auth.currentUser?.displayName, state.userName)
+
+  useEffect(() => {
+    console.log("onAuthStateChanged from drawer", auth.currentUser, state.isLoggedIn, state.favourites);
+    if(!state.isLoggedInStateonAuthUpdated) setLoggedInStateOnAuthChange();
+  },[state.isLoggedIn])
+
   return (
     <View 
       style={[styles.container, { marginTop }]}>
@@ -40,6 +47,7 @@ export default function Index() {
         </View>
         <MenuItems />
       </View>
+      <ReauthenticateModal />
     </View>
   );
 }

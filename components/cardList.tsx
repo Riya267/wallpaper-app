@@ -7,7 +7,7 @@ import { theme } from '@/constants/theme';
 
 type CardListProps = {
   router: any;
-  wallpapers: WallpaperInterface[];
+  wallpapers: WallpaperInterface[] | [];
   loading: boolean;
   columns: number;
   loadMoreWallpapers?: () => void;

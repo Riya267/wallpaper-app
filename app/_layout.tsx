@@ -62,7 +62,6 @@ function RootLayoutNav() {
               animation: 'fade',
             }}
           />
-          <Stack.Screen name="home/generate" />
           <Stack.Screen name="home/favourite" />
           <Stack.Screen name="auth/login" />
           <Stack.Screen name="auth/register" />

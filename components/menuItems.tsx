@@ -1,9 +1,7 @@
-import categories from '@/constants/categories';
 import { menuItems } from '@/constants/menuItems';
 import { theme } from '@/constants/theme';
 import { AppContext } from '@/context/appContext';
 import { logout } from '@/util/auth';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
 import {
@@ -17,12 +15,15 @@ import { Toast, ALERT_TYPE } from 'react-native-alert-notification';
 
 const MenuItems: React.FC = () => {
   const router = useRouter();
-  const { state, signOff } = useContext(AppContext);
+  const { state, signOff, toggleReauthicateModalVisibility } =
+    useContext(AppContext);
 
   const handleItemClick = async (path: string, item: string) => {
     if (!path && item === 'Logout') {
       const isLoggedOut = await logout();
       if (isLoggedOut) signOff();
+    } else if (!path && item === 'Delete Account') {
+      toggleReauthicateModalVisibility(true);
     } else {
       state.isLoggedIn
         ? router.push({ pathname: path } as never)
@@ -38,7 +39,7 @@ const MenuItems: React.FC = () => {
     <View style={{ marginVertical: 20 }}>
       <ScrollView scrollEnabled>
         {menuItems.map((menuItem) => {
-          if (!state.isLoggedIn && menuItem.item === 'Logout') {
+          if (!state.isLoggedIn && !menuItem.showOnLoggedOut) {
             return null;
           }
           return (
@@ -47,11 +48,7 @@ const MenuItems: React.FC = () => {
               key={menuItem.item}
               onPress={() => handleItemClick(menuItem.path, menuItem.item)}
             >
-              <MaterialIcons
-                name={menuItem.icon as any}
-                size={24}
-                color={theme.colors.pink}
-              />
+              {menuItem.icon}
               <Text
                 style={{
                   color: theme.colors.white,

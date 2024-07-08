@@ -27,8 +27,7 @@ const Register = () => {
     setLoading(true);
     await register(values.email, values.password, values.userName);
     setLoading(false);
-    resetForm(); // Reset the form values to their initial state
-    console.log("values", values);
+    resetForm();
   }
 
   return (

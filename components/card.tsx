@@ -19,9 +19,10 @@ type CardProps = {
 const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
   const { state, updateFavourites } = useContext(AppContext);
   const [isFavourite, setIsFavourite] = useState(
-    state.favourites.wallpapers?.some(
-      (favouriteWallpaper) => favouriteWallpaper.id === wallpaper.id
-    )
+    state.favourites.wallpapers?.length > 0 &&
+      state.favourites.wallpapers?.some(
+        (favouriteWallpaper) => favouriteWallpaper.id === wallpaper.id
+      )
   );
 
   const isLastInRow = () => {
@@ -60,9 +61,12 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
   };
 
   useEffect(() => {
-    const isFav = state.favourites.wallpapers?.some(
-      (favouriteWallpapers) => favouriteWallpapers.id === wallpaper.id
-    );
+    console.log('wallpapers', state.favourites);
+    const isFav =
+      state.favourites.wallpapers?.length > 0 &&
+      state.favourites.wallpapers?.some(
+        (favouriteWallpapers) => favouriteWallpapers.id === wallpaper.id
+      );
     setIsFavourite(isFav);
   }, [state.favourites.wallpapers, wallpaper.id]);
 
