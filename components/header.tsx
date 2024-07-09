@@ -17,7 +17,6 @@ const Header: React.FC = () => {
   const { setQueryString, toggleFilterModalVisibility, setPage } =
     useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
   const handleSearch = (query: string) => {
     setSearchTerm(query);
@@ -29,18 +28,14 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      setQueryString(searchTerm);
+      setPage(1);
     }, 500);
 
     return () => {
       clearTimeout(handler);
     };
   }, [searchTerm]);
-
-  useEffect(() => {
-    setQueryString(debouncedSearchTerm);
-    setPage(1);
-  }, [debouncedSearchTerm]);
 
   return (
     <View style={styles.headerContainer}>

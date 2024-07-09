@@ -24,7 +24,7 @@ export default function Index() {
         barStyle="light-content"
       />
       <Image
-        source={require('../assets/images/wallpapers.jpg')}
+        source={require('../assets/images/wallpapers.png')}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
@@ -62,6 +62,8 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
+    height: '100%',
+    width: '100%',
   },
   exploreButton: {
     backgroundColor: theme.colors.pink,
