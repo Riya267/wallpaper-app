@@ -7,6 +7,8 @@
 
 **PixelGinie** is a wallpaper app built with React Native (expo) that allows users to explore, download, and share high-quality wallpapers. Users can also filter wallpapers based on various criteria, save their favorites, and manage their accounts.
 
+![image](https://github.com/Riya267/wallpaper-app/assets/81959232/d4c6c333-47ff-42ac-858e-cf31acdc46f0)
+
 ## Features
 
 ### Home Screen
