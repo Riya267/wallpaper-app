@@ -15,7 +15,7 @@ import {
 const ReauthenticateModal: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { state, toggleReauthicateModalVisibility } = useContext(AppContext);
+  const { state, toggleReauthenticateModalVisibility } = useContext(AppContext);
   const handleReauthenticate = async () => {
     setIsLoading(true);
     const isReauthicated = await reauthenticateUser(password);
@@ -28,14 +28,14 @@ const ReauthenticateModal: React.FC = () => {
   };
 
   const handleClose = () => {
-    toggleReauthicateModalVisibility(false);
+    toggleReauthenticateModalVisibility(false);
     setPassword('');
   };
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={state.openReauthicateModal}
+      visible={state.openReauthenticateModal}
       onRequestClose={handleClose}
     >
       <View style={styles.modalContainer}>

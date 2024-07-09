@@ -5,9 +5,7 @@ import {
   UserCredential,
   updateProfile,
   User,
-  deleteUser,
   reauthenticateWithCredential,
-  AuthCredential,
   EmailAuthProvider,
 } from 'firebase/auth';
 import {

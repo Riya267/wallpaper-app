@@ -88,7 +88,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
           source={{ uri: imageUrl }}
           style={[styles.image, getImageDimensions(imageHeight, imageWidth)]}
           transition={1000}
-          contentFit="fill"
+          contentFit="contain"
           onLoad={() => setLoadingState('')}
         />
       </View>

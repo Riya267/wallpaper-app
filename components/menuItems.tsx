@@ -15,7 +15,7 @@ import { Toast, ALERT_TYPE } from 'react-native-alert-notification';
 
 const MenuItems: React.FC = () => {
   const router = useRouter();
-  const { state, signOff, toggleReauthicateModalVisibility } =
+  const { state, signOff, toggleReauthenticateModalVisibility } =
     useContext(AppContext);
 
   const handleItemClick = async (path: string, item: string) => {
@@ -23,7 +23,7 @@ const MenuItems: React.FC = () => {
       const isLoggedOut = await logout();
       if (isLoggedOut) signOff();
     } else if (!path && item === 'Delete Account') {
-      toggleReauthicateModalVisibility(true);
+      toggleReauthenticateModalVisibility(true);
     } else {
       state.isLoggedIn
         ? router.push({ pathname: path } as never)

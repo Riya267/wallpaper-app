@@ -2,42 +2,46 @@ import { FilterOptionsInterface } from '@/components/filterModal';
 
 const API_URL = `${process.env.EXPO_PUBLIC_PIXA_API_BASE_URL}?key=${process.env.EXPO_PUBLIC_PIXA_AUTH_KEY}`;
 
-type GetPostsInterface = {
+interface GetPostsInterface {
   page: number;
   pageSize: number;
   category?: string;
   querystring?: string;
-  appliedFilters?: FilterOptionsInterface[]; // Change here
-};
+  appliedFilters?: FilterOptionsInterface[];
+}
 
 const getAllWallpapers = async ({
   page,
   pageSize,
   category,
   querystring,
-  appliedFilters,
+  appliedFilters = [],
 }: GetPostsInterface) => {
   try {
-    let filters = '';
-    if (appliedFilters && appliedFilters.length > 0) {
-      appliedFilters.forEach((filter) => {
-        filters += `&${filter.mappingKey}=${filter.filterOptions.join(',')}`;
-      });
-    }
-    console.log(
-      'api url',
-      `${API_URL}&per_page=${pageSize}&page=${page}${querystring ? `&q=${querystring}` : ''}${category ? `&category=${category}` : ''}${filters ? filters : ''}`
-    );
-    const response = await fetch(
-      `${API_URL}&per_page=${pageSize}&page=${page}${querystring ? `&q=${querystring}` : ''}${category ? `&category=${category}` : ''}${filters ? filters : ''}`,
-      {
-        method: 'GET',
-      }
-    );
+    const filters = appliedFilters
+      .map((filter) => `${filter.mappingKey}=${filter.filterOptions.join(',')}`)
+      .join('&');
+
+    const urlParams = new URLSearchParams({
+      per_page: String(pageSize),
+      page: String(page),
+      ...(querystring && { q: querystring }),
+      ...(category && { category }),
+      ...(filters && { filters }),
+    });
+
+    const apiUrl = `${API_URL}&${urlParams.toString()}`;
+    console.log('api url', apiUrl);
+
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+    });
+
     const allPosts = await response.json();
     return allPosts?.hits;
   } catch (error) {
-    console.log('error', error);
+    console.error('Error fetching wallpapers:', error);
+    throw error;
   }
 };
 

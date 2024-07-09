@@ -1,4 +1,11 @@
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import {
+  ReactNode,
+  createContext,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from 'react';
 import { getAllWallpapers } from '../util/api';
 import { FilterOptionsInterface } from '@/components/filterModal';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -15,9 +22,11 @@ export interface WallpaperInterface {
   imageWidth: number;
   imageHeight: number;
 }
+
 export interface FavouritesInterface {
   wallpapers: Array<WallpaperInterface>;
 }
+
 interface AppState {
   isLoggedIn: boolean;
   userName: string;
@@ -30,11 +39,12 @@ interface AppState {
   scrollMoreWallpapers: boolean;
   loading: boolean;
   error: string | null;
-  openfilterModal: boolean;
+  openFilterModal: boolean;
   favourites: FavouritesInterface;
-  openReauthicateModal: boolean;
-  isLoggedInStateonAuthUpdated: boolean;
+  openReauthenticateModal: boolean;
+  isLoggedInStateOnAuthUpdated: boolean;
 }
+
 interface AppContextProps {
   state: AppState;
   fetchWallpapers: () => void;
@@ -48,7 +58,7 @@ interface AppContextProps {
   signIn: (userName: string) => void;
   signOff: () => void;
   updateFavourites: (favourites: FavouritesInterface) => void;
-  toggleReauthicateModalVisibility: (toggle: boolean) => void;
+  toggleReauthenticateModalVisibility: (toggle: boolean) => void;
   setLoggedInStateOnAuthChange: () => void;
 }
 
@@ -56,7 +66,7 @@ interface AppProviderProps {
   children: ReactNode;
 }
 
-const initialState = {
+const initialState: AppState = {
   isLoggedIn: false,
   userName: '',
   page: 1,
@@ -66,14 +76,12 @@ const initialState = {
   wallpapers: [],
   loading: false,
   error: null,
-  openfilterModal: false,
-  appliedfilters: [],
+  openFilterModal: false,
+  appliedFilters: [],
   scrollMoreWallpapers: true,
-  favourites: {
-    wallpapers: [],
-  },
-  openReauthicateModal: false,
-  isLoggedInStateonAuthUpdated: false,
+  favourites: { wallpapers: [] },
+  openReauthenticateModal: false,
+  isLoggedInStateOnAuthUpdated: false,
 };
 
 export const AppContext = createContext<AppContextProps>({
@@ -89,110 +97,116 @@ export const AppContext = createContext<AppContextProps>({
   signIn: () => {},
   signOff: () => {},
   updateFavourites: () => {},
-  toggleReauthicateModalVisibility: () => {},
+  toggleReauthenticateModalVisibility: () => {},
   setLoggedInStateOnAuthChange: () => {},
 });
 
 export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
 
-  const setLoggedInStateOnAuthChange = () => {
+  const setLoggedInStateOnAuthChange = useCallback(() => {
     console.log('setLoggedInStateOnAuthChange', state.isLoggedIn);
-    signIn(auth.currentUser?.displayName!);
+    if (auth.currentUser?.displayName) {
+      signIn(auth.currentUser.displayName);
+    }
+
     if (state.isLoggedIn) {
-      async function fetchWallpapersAndUpdateState() {
+      const fetchWallpapersAndUpdateState = async () => {
         const favouriteWallpapers = await getDocument(
           misc.FAVOURITES_COLLECTION_NAME,
           auth.currentUser?.uid as string
         );
-        if (favouriteWallpapers)
+        if (favouriteWallpapers) {
           updateFavourites(favouriteWallpapers as FavouritesInterface);
-      }
+        }
+      };
       fetchWallpapersAndUpdateState();
     }
+
     setState((prevState) => ({
       ...prevState,
-      isLoggedInStateonAuthUpdated: true,
+      isLoggedInStateOnAuthUpdated: true,
     }));
-  };
+  }, [state.isLoggedIn]);
 
-  const toggleReauthicateModalVisibility = (toggle: boolean) => {
+  const toggleReauthenticateModalVisibility = useCallback((toggle: boolean) => {
     setState((prevState) => ({
       ...prevState,
-      openReauthicateModal: toggle,
+      openReauthenticateModal: toggle,
     }));
-  };
+  }, []);
 
-  const updateFavourites = (favourites: FavouritesInterface) => {
+  const updateFavourites = useCallback((favourites: FavouritesInterface) => {
     setState((prevState) => ({
       ...prevState,
-      favourites: favourites,
+      favourites,
     }));
-  };
+  }, []);
 
-  const signIn = (userName: string) => {
+  const signIn = useCallback((userName: string) => {
     setState((prevState) => ({
       ...prevState,
       isLoggedIn: true,
-      userName: userName,
+      userName,
     }));
-  };
+  }, []);
 
-  const signOff = () => {
+  const signOff = useCallback(() => {
     setState((prevState) => ({
       ...prevState,
       isLoggedIn: false,
       userName: '',
     }));
-  };
+  }, []);
 
-  const removeFilter = (filter: string) => {
+  const removeFilter = useCallback((filter: string) => {
     setState((prevState) => ({
       ...prevState,
       appliedFilters: prevState.appliedFilters?.filter(
         (appliedFilter) => !appliedFilter.filterOptions.includes(filter)
       ),
     }));
-  };
+  }, []);
 
-  const setSelectedCategory = (selectedCategory: string) => {
+  const setSelectedCategory = useCallback((selectedCategory: string) => {
     setState((prevState) => ({
       ...prevState,
       selectedCategory: selectedCategory ?? '',
     }));
-  };
+  }, []);
 
-  const setQueryString = (queryString: string) => {
+  const setQueryString = useCallback((queryString: string) => {
     setState((prevState) => ({
       ...prevState,
       queryString: queryString ?? '',
     }));
-  };
+  }, []);
 
-  const setPage = (page: number) => {
+  const setPage = useCallback((page: number) => {
     setState((prevState) => ({
       ...prevState,
       page: page ?? 1,
     }));
-  };
+  }, []);
 
-  const setShowMoreWallpapers = (hasMore: boolean) => {
+  const setShowMoreWallpapers = useCallback((hasMore: boolean) => {
     setState((prevState) => ({
       ...prevState,
       scrollMoreWallpapers: hasMore,
     }));
-  };
+  }, []);
 
-  const setAppliedFilters = (
-    selectedFilters: Array<FilterOptionsInterface>
-  ) => {
-    setState((prevState) => ({
-      ...prevState,
-      appliedFilters: selectedFilters,
-    }));
-  };
+  const setAppliedFilters = useCallback(
+    (selectedFilters: Array<FilterOptionsInterface>) => {
+      setState((prevState) => ({
+        ...prevState,
+        appliedFilters: selectedFilters,
+      }));
+    },
+    []
+  );
 
-  const fetchWallpapers = async () => {
+  const fetchWallpapers = useCallback(async () => {
     setState((prevState) => ({ ...prevState, loading: true, error: null }));
     try {
       const allPosts = await getAllWallpapers({
@@ -202,6 +216,7 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
         category: state.selectedCategory,
         appliedFilters: state.appliedFilters,
       });
+
       if (allPosts?.length === 0) {
         setState((prevState) => ({
           ...prevState,
@@ -213,9 +228,9 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
         setState((prevState) => ({
           ...prevState,
           wallpapers:
-            state.page === 1 && state.wallpapers.length > 0
+            state.page === 1
               ? allPosts
-              : [...state.wallpapers, ...allPosts],
+              : [...prevState.wallpapers, ...allPosts],
           loading: false,
           error: null,
           scrollMoreWallpapers: true,
@@ -228,43 +243,67 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
         error: 'Failed to fetch user data',
       }));
     }
-  };
+  }, [
+    state.page,
+    state.perPage,
+    state.queryString,
+    state.selectedCategory,
+    state.appliedFilters,
+  ]);
 
-  const toggleFilterModalVisibility = (toggle: boolean) => {
-    setState((prevState) => ({ ...prevState, openfilterModal: toggle }));
-  };
+  const toggleFilterModalVisibility = useCallback((toggle: boolean) => {
+    setState((prevState) => ({ ...prevState, openFilterModal: toggle }));
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('onAuthStateChanged unsubscribe', user);
+      console.log('onAuthStateChanged', user);
       if (!user) {
         setState(initialState);
+      } else {
+        setLoggedInStateOnAuthChange();
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [setLoggedInStateOnAuthChange]);
+
+  const contextValue = useMemo(
+    () => ({
+      state,
+      fetchWallpapers,
+      toggleFilterModalVisibility,
+      removeFilter,
+      setSelectedCategory,
+      setQueryString,
+      setPage,
+      setShowMoreWallpapers,
+      setAppliedFilters,
+      signIn,
+      signOff,
+      updateFavourites,
+      toggleReauthenticateModalVisibility,
+      setLoggedInStateOnAuthChange,
+    }),
+    [
+      state,
+      fetchWallpapers,
+      toggleFilterModalVisibility,
+      removeFilter,
+      setSelectedCategory,
+      setQueryString,
+      setPage,
+      setShowMoreWallpapers,
+      setAppliedFilters,
+      signIn,
+      signOff,
+      updateFavourites,
+      toggleReauthenticateModalVisibility,
+      setLoggedInStateOnAuthChange,
+    ]
+  );
 
   return (
-    <AppContext.Provider
-      value={{
-        state,
-        setLoggedInStateOnAuthChange,
-        fetchWallpapers,
-        toggleFilterModalVisibility,
-        removeFilter,
-        setSelectedCategory,
-        setQueryString,
-        setPage,
-        setShowMoreWallpapers,
-        setAppliedFilters,
-        signIn,
-        signOff,
-        updateFavourites,
-        toggleReauthicateModalVisibility,
-      }}
-    >
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };

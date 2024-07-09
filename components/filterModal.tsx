@@ -82,7 +82,7 @@ const FilterModal: React.FC = () => {
     <Modal
       animationType="slide"
       transparent={true}
-      visible={state.openfilterModal}
+      visible={state.openFilterModal}
       onRequestClose={onClose}
     >
       <View style={styles.modalContainer}>

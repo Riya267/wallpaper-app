@@ -1,6 +1,6 @@
 import { theme } from '@/constants/theme';
 import { BlurView } from 'expo-blur';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { StatusBar, StyleSheet } from 'react-native';
 import ImageViewer from '@/components/imageViewer';
 
