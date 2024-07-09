@@ -1,4 +1,4 @@
-import { FilterOptionsInterface } from '@/components/filterModal';
+import { FilterOptionsInterface } from '@/components/FilterModal';
 
 const API_URL = `${process.env.EXPO_PUBLIC_PIXA_API_BASE_URL}?key=${process.env.EXPO_PUBLIC_PIXA_AUTH_KEY}`;
 
@@ -27,11 +27,9 @@ const getAllWallpapers = async ({
       page: String(page),
       ...(querystring && { q: querystring }),
       ...(category && { category }),
-      ...(filters && { filters }),
     });
 
-    const apiUrl = `${API_URL}&${urlParams.toString()}`;
-    console.log('api url', apiUrl);
+    const apiUrl = `${API_URL}&${urlParams.toString()}${filters ? `&${filters}` : ''}`;
 
     const response = await fetch(apiUrl, {
       method: 'GET',

@@ -1,8 +1,8 @@
-import { theme } from '@/constants/theme';
+import { theme } from '@/constants/Theme';
 import { BlurView } from 'expo-blur';
 import { useLocalSearchParams } from 'expo-router';
 import { StatusBar, StyleSheet } from 'react-native';
-import ImageViewer from '@/components/imageViewer';
+import ImageViewer from '@/components/ImageViewer';
 
 export default function ImageModal() {
   const { imageUrl, imageHeight, imageWidth } = useLocalSearchParams<{ imageUrl: string; imageHeight: string; imageWidth: string }>();

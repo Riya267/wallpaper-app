@@ -80,7 +80,6 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
       return null;
     }
   };
-  console.log('imageViewer Props', imageUrl);
   return (
     <View style={styles.container}>
       <View style={getImageDimensions(imageHeight, imageWidth)}>

@@ -1,4 +1,4 @@
-import { ContextProvider } from '@/context/appContext';
+import { ContextProvider } from '@/context/AppContext';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -56,15 +56,15 @@ function RootLayoutNav() {
           <Stack.Screen name="index" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen
-            name="home/imageModal"
+            name="Home/ImageModal"
             options={{
               presentation: 'transparentModal',
               animation: 'fade',
             }}
           />
-          <Stack.Screen name="home/favourite" />
-          <Stack.Screen name="auth/login" />
-          <Stack.Screen name="auth/register" />
+          <Stack.Screen name="Home/Favourite" />
+          <Stack.Screen name="Auth/Login" />
+          <Stack.Screen name="Auth/Register" />
         </Stack>
       </AlertNotificationRoot>
     </ContextProvider>

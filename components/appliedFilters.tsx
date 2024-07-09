@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { AppContext } from '@/context/appContext';
-import { theme } from '@/constants/theme';
+import { AppContext } from '@/context/AppContext';
+import { theme } from '@/constants/Theme';
 
 const AppliedFiltersList: React.FC = () => {
   const { state, removeFilter, setPage } = useContext(AppContext);

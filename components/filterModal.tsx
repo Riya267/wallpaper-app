@@ -1,4 +1,4 @@
-import { AppContext } from '@/context/appContext';
+import { AppContext } from '@/context/AppContext';
 import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
@@ -9,8 +9,8 @@ import {
   Pressable,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { theme } from '@/constants/theme';
-import filterOptions from '@/constants/filters';
+import { theme } from '@/constants/Theme';
+import filterOptions from '@/constants/Filters';
 
 export interface FilterOptionsInterface {
   filterLabel: string;

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
-import { theme } from '@/constants/theme';
+import { theme } from '@/constants/Theme';
 import { useRouter } from 'expo-router';
-import { login } from '@/util/auth';
-import { AppContext } from '@/context/appContext';
+import { login } from '@/services/auth';
+import { AppContext } from '@/context/AppContext';
 import { auth } from '@/util/firebase';
-import LoginForm from '@/components/loginForm';
+import LoginForm from '@/components/LoginForm';
 
 const Login = () => {
   const router = useRouter();
@@ -13,7 +13,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const handleRegisterClick = () => {
-    router.push({ pathname: "/auth/register" } as never);
+    router.push({ pathname: "/Auth/Register" } as never);
   };
 
   const handleLogin = async (values: { email: string, password: string }) => {
@@ -22,7 +22,7 @@ const Login = () => {
     setLoading(false);
     if (isLoggedIn) {
       signIn(auth.currentUser?.displayName as string);
-      router.push({ pathname: "/(tabs)/home/" } as never);
+      router.push({ pathname: "/(tabs)/Home/" } as never);
     }
   };
 

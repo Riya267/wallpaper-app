@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { MasonryFlashList } from '@shopify/flash-list';
-import Card from './card';
-import { WallpaperInterface } from '@/context/appContext';
-import { theme } from '@/constants/theme';
+import Card from './Card';
+import { WallpaperInterface } from '@/context/AppContext';
+import { theme } from '@/constants/Theme';
 
 type CardListProps = {
   router: any;

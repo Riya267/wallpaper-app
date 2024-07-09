@@ -1,15 +1,11 @@
-import AppliedFiltersList from '@/components/appliedFilters';
-import CardListContainer from '@/components/cardListContainer';
-import CategoriesList from '@/components/categories';
-import FilterModal from '@/components/filterModal';
-import Header from '@/components/header';
-import { misc } from '@/constants/misc';
-import { theme } from '@/constants/theme';
-import { AppContext, FavouritesInterface } from '@/context/appContext';
-import { getDocument } from '@/util/auth';
-import { auth } from '@/util/firebase';
+import AppliedFiltersList from '@/components/AppliedFilters';
+import CardListContainer from '@/components/CardListContainer';
+import CategoriesList from '@/components/Categories';
+import FilterModal from '@/components/FilterModal';
+import Header from '@/components/Header';
+import { theme } from '@/constants/Theme';
+import { AppContext } from '@/context/AppContext';
 import { useRouter } from 'expo-router';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useContext, useEffect } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,7 +17,7 @@ export default function Index() {
   const { state, setLoggedInStateOnAuthChange } = useContext(AppContext);
   
   useEffect(() => {
-      if(state.isLoggedInStateonAuthUpdated) setLoggedInStateOnAuthChange();
+      if(state.isLoggedInStateOnAuthUpdated) setLoggedInStateOnAuthChange();
   }, [state.isLoggedIn]);
   
   return (

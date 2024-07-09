@@ -6,9 +6,9 @@ import {
   View,
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
-import { theme } from '@/constants/theme';
+import { theme } from '@/constants/Theme';
 import { useContext, useEffect, useState } from 'react';
-import { AppContext } from '@/context/appContext';
+import { AppContext } from '@/context/AppContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 

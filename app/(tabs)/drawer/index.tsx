@@ -1,11 +1,10 @@
-import MenuItems from '@/components/menuItems';
-import ReauthenticateModal from '@/components/reauthicateModal';
-import { theme } from '@/constants/theme';
-import { AppContext } from '@/context/appContext';
+import MenuItems from '@/components/MenuItems';
+import ReauthenticateModal from '@/components/ReauthicateModal';
+import { theme } from '@/constants/Theme';
+import { AppContext } from '@/context/AppContext';
 import { auth } from '@/util/firebase';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useContext, useEffect } from 'react';
 import { Pressable, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,12 +15,11 @@ export default function Index() {
   const router = useRouter();
   const { state, setLoggedInStateOnAuthChange } = useContext(AppContext);
   const handleLogin = () => {
-    router.push({ pathname: "/auth/login" } as never)
+    router.push({ pathname: "/Login" } as never)
   }
 
   useEffect(() => {
-    console.log("onAuthStateChanged from drawer", auth.currentUser, state.isLoggedIn, state.favourites);
-    if(!state.isLoggedInStateonAuthUpdated) setLoggedInStateOnAuthChange();
+    if(!state.isLoggedInStateOnAuthUpdated) setLoggedInStateOnAuthChange();
   },[state.isLoggedIn])
 
   return (

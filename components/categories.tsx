@@ -7,9 +7,9 @@ import {
   View,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { AppContext } from '@/context/appContext';
-import categories from '@/constants/categories';
-import { theme } from '@/constants/theme';
+import { AppContext } from '@/context/AppContext';
+import categories from '@/constants/Categories';
+import { theme } from '@/constants/Theme';
 
 const CategoriesList: React.FC = () => {
   const { state, setSelectedCategory, setPage } = useContext(AppContext);

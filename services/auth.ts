@@ -15,7 +15,7 @@ import {
   DocumentReference,
   DocumentData,
 } from 'firebase/firestore';
-import db from './firebase';
+import db from '../util/firebase';
 import { ALERT_TYPE, Dialog, Toast } from 'react-native-alert-notification';
 import { auth } from '../util/firebase';
 
@@ -34,8 +34,7 @@ export const createDocument = async (
 ): Promise<void> => {
   try {
     await setDoc(doc(db, collectionName, customId), data);
-    console.log('Document written with ID:', customId);
-  } catch (error: unknown) {
+    } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Error creating document:', error);
     }
@@ -50,10 +49,8 @@ export const getDocument = async (
     const docRef: DocumentReference = doc(db, collectionName, customId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data());
       return docSnap.data();
     } else {
-      console.log('No such document!');
       return null;
     }
   } catch (error: unknown) {
@@ -80,7 +77,6 @@ export const login = async (
       email,
       password
     );
-    console.log('userObject', userCredential.user.displayName);
     showToast(ALERT_TYPE.SUCCESS, 'SignIn', 'User Login successfully');
     return true;
   } catch (error: unknown) {
@@ -106,7 +102,7 @@ export const register = async (
     await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(auth.currentUser as User, {
       displayName: userName,
-    }).catch((err) => console.log('updateProfile', err));
+    });
     showToast(
       ALERT_TYPE.SUCCESS,
       'Registration',
@@ -127,7 +123,6 @@ export const register = async (
 export const logout = async (): Promise<boolean> => {
   try {
     await signOut(auth);
-    console.log('Logout');
     showToast(ALERT_TYPE.SUCCESS, 'SignOut', 'User Logout successfully');
     return true;
   } catch (error: unknown) {
@@ -150,7 +145,6 @@ export const removeUser = async () => {
       onPressButton: async () => {
         if (auth.currentUser) {
           await auth.currentUser?.delete();
-          console.log('auth user', auth.currentUser);
           showToast(ALERT_TYPE.SUCCESS, 'Delete', 'User deleted successfully');
           Dialog.hide();
           return true;
@@ -188,10 +182,8 @@ export const reauthenticateUser = (password: string) => {
       auth.currentUser?.email!,
       password
     );
-    console.log('credential', credential);
     return reauthenticateWithCredential(auth.currentUser!, credential)
       .then(() => {
-        console.log('reauthenticateWithCredential');
         return true;
       })
       .catch((error) => {

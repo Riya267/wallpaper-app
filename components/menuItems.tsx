@@ -1,7 +1,7 @@
-import { menuItems } from '@/constants/menuItems';
-import { theme } from '@/constants/theme';
-import { AppContext } from '@/context/appContext';
-import { logout } from '@/util/auth';
+import { menuItems } from '@/constants/MenuItems';
+import { theme } from '@/constants/Theme';
+import { AppContext } from '@/context/AppContext';
+import { logout } from '@/services/auth';
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
 import {

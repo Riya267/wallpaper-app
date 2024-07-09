@@ -1,6 +1,6 @@
-import { theme } from '@/constants/theme';
-import { AppContext } from '@/context/appContext';
-import { reauthenticateUser, removeUser } from '@/util/auth';
+import { theme } from '@/constants/Theme';
+import { AppContext } from '@/context/AppContext';
+import { reauthenticateUser, removeUser } from '@/services/auth';
 import React, { useContext, useState } from 'react';
 import {
   View,
@@ -19,7 +19,6 @@ const ReauthenticateModal: React.FC = () => {
   const handleReauthenticate = async () => {
     setIsLoading(true);
     const isReauthicated = await reauthenticateUser(password);
-    console.log('isReauthicated', isReauthicated);
     if (isReauthicated) {
       setIsLoading(false);
       handleClose();

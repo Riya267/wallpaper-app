@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Pressable, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { theme } from '@/constants/theme';
+import { theme } from '@/constants/Theme';
 import { useRouter } from 'expo-router';
-import { register } from '@/util/auth';
+import { register } from '@/services/auth';
 
 const RegisterSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -20,7 +20,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLoginClick = () => {
-    router.push({ pathname: "/auth/login" } as never);
+    router.push({ pathname: "/Auth/Login" } as never);
   };
 
   const handleRegister = async (values: { email: string, password: string, userName: string }, resetForm: any) => {

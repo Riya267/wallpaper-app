@@ -6,12 +6,12 @@ import {
   useState,
   useCallback,
 } from 'react';
-import { getAllWallpapers } from '../util/api';
-import { FilterOptionsInterface } from '@/components/filterModal';
+import { getAllWallpapers } from '../services/api';
+import { FilterOptionsInterface } from '@/components/FilterModal';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/util/firebase';
-import { getDocument } from '@/util/auth';
-import { misc } from '@/constants/misc';
+import { getDocument } from '@/services/auth';
+import { misc } from '@/constants/Misc';
 
 export interface WallpaperInterface {
   id: number;
@@ -105,7 +105,6 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
 
   const setLoggedInStateOnAuthChange = useCallback(() => {
-    console.log('setLoggedInStateOnAuthChange', state.isLoggedIn);
     if (auth.currentUser?.displayName) {
       signIn(auth.currentUser.displayName);
     }
@@ -162,9 +161,12 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
   const removeFilter = useCallback((filter: string) => {
     setState((prevState) => ({
       ...prevState,
-      appliedFilters: prevState.appliedFilters?.filter(
-        (appliedFilter) => !appliedFilter.filterOptions.includes(filter)
-      ),
+      appliedFilters: prevState.appliedFilters?.map((appliedFilter) => {
+        appliedFilter.filterOptions = appliedFilter.filterOptions.filter(
+          (option) => option !== filter
+        );
+        return appliedFilter;
+      }),
     }));
   }, []);
 
@@ -257,7 +259,6 @@ export const ContextProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('onAuthStateChanged', user);
       if (!user) {
         setState(initialState);
       } else {

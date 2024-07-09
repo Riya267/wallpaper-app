@@ -1,4 +1,4 @@
-import { FilterOptionsInterface } from '@/components/filterModal';
+import { FilterOptionsInterface } from '@/components/FilterModal';
 
 const filterOptions: FilterOptionsInterface[] = [
   {

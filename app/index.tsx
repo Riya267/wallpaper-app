@@ -1,4 +1,4 @@
-import { theme } from '@/constants/theme';
+import { theme } from '@/constants/Theme';
 import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
 import {
@@ -35,7 +35,7 @@ export default function Index() {
         </Text>
         <TouchableOpacity
           style={styles.exploreButton}
-          onPress={() => router.push('/home/')}
+          onPress={() => router.push('/Home/')}
         >
           <Text style={styles.exploreButtonText}>Get Started</Text>
         </TouchableOpacity>

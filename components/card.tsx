@@ -13,12 +13,12 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import { AntDesign } from '@expo/vector-icons';
-import { AppContext, WallpaperInterface } from '@/context/appContext';
+import { AppContext, WallpaperInterface } from '@/context/AppContext';
 import { getImageSize } from '@/util/helper';
-import { createDocument } from '@/util/auth';
-import { misc } from '@/constants/misc';
+import { createDocument } from '@/services/auth';
+import { misc } from '@/constants/Misc';
 import { auth } from '@/util/firebase';
-import { theme } from '@/constants/theme';
+import { theme } from '@/constants/Theme';
 
 type CardProps = {
   wallpaper: WallpaperInterface;
@@ -85,7 +85,7 @@ const Card: React.FC<CardProps> = ({ wallpaper, index, columns, router }) => {
       style={[styles.imageWrapper, !isLastInRow && styles.spacing]}
       onPress={() =>
         router.push({
-          pathname: 'home/imageModal',
+          pathname: 'Home/ImageModal',
           params: {
             imageUrl: wallpaper.webformatURL,
             imageHeight: wallpaper.imageHeight,

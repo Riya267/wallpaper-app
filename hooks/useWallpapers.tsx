@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { AppContext } from '@/context/appContext';
+import { AppContext } from '@/context/AppContext';
 import { getColumns } from '@/util/helper';
 
 const useWallpapers = () => {
@@ -16,7 +16,6 @@ const useWallpapers = () => {
 
   const loadMoreWallpapers = () => {
     if (!state.loading && state.scrollMoreWallpapers) {
-      console.log('page', state.page);
       setPage(state.page + 1);
     }
   };

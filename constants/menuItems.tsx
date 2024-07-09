@@ -1,10 +1,10 @@
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { theme } from './theme';
+import { theme } from './Theme';
 
 export const menuItems = [
   {
     item: 'Favourites',
-    path: 'home/favourite',
+    path: 'Home/Favourite',
     icon: (
       <MaterialIcons name={'favorite'} size={24} color={theme.colors.pink} />
     ),

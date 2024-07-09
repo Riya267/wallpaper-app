@@ -1,6 +1,6 @@
-import CardList from '@/components/cardList';
-import { theme } from '@/constants/theme';
-import { AppContext } from '@/context/appContext';
+import CardList from '@/components/CardList';
+import { theme } from '@/constants/Theme';
+import { AppContext } from '@/context/AppContext';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useContext} from 'react';
@@ -32,7 +32,7 @@ export default function Favourites() {
         <CardList router={router} wallpapers={state.favourites.wallpapers} loading={false} columns={2}  />
         : <View style={{display: "flex", justifyContent: "center", alignItems: "center", flex: 0.9 }}>
              <Text style={{ color: theme.colors.white }}>You have not saved any favourite wallpapers</Text>
-             <TouchableOpacity style={{ backgroundColor: theme.colors.pink, paddingVertical: 10, paddingHorizontal: 20, marginVertical: 25, borderRadius: 20 }} onPress={()=>router.push("/(tabs)/home/")}>
+             <TouchableOpacity style={{ backgroundColor: theme.colors.pink, paddingVertical: 10, paddingHorizontal: 20, marginVertical: 25, borderRadius: 20 }} onPress={()=>router.push("/(tabs)/Home/")}>
                 <Text style={{ color: theme.colors.white }} >View Wallpapers</Text>
              </TouchableOpacity>
         </View>
